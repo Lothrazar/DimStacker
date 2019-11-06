@@ -1,5 +1,6 @@
 package com.lothrazar.dimstack;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
@@ -15,14 +16,17 @@ import net.minecraft.world.WorldServer;
 //https://github.com/Mrbysco/TelePastries/blob/044fd1b78a43cca9fbbc7a4bf07599dcde1d0c7c/src/main/java/com/mrbysco/telepastries/util/CakeTeleporter.java
 public class StackTeleporter extends Teleporter {
 
-  public StackTeleporter(WorldServer world) {
+  private BlockPos position;
+
+  public StackTeleporter(WorldServer world, BlockPos pos) {
     super(world);
+    this.position = pos;
   }
 
-  public void teleportToDimension(EntityPlayerMP player, int dimension, BlockPos pos) throws IllegalArgumentException {
-    BlockPos dimPos = pos;//getDimensionPosition((EntityPlayerMP) player, dimension, pos);
-    teleportToDimension(player, dimension, dimPos.getX() + 0.5D, dimPos.getY(), dimPos.getZ() + 0.5D);
-    this.protectPlayer(player, pos);
+  public void teleportToDimension(EntityPlayerMP player, int dimension) throws IllegalArgumentException {
+    //    BlockPos dimPos = pos;//getDimensionPosition((EntityPlayerMP) player, dimension, pos);
+    teleportToDimension(player, dimension, position.getX() + 0.5D, position.getY(), position.getZ() + 0.5D);
+    this.protectPlayer(player, position);
   }
 
   private void teleportToDimension(EntityPlayerMP player, int dimension, double x, double y, double z) throws IllegalArgumentException {
@@ -40,6 +44,14 @@ public class StackTeleporter extends Teleporter {
     else {
       throw new IllegalArgumentException("Dimension: " + dimension + " doesn't exist! Or playerList error");
     }
+  }
+
+  @Override
+  public void placeInPortal(Entity entityIn, float rotationYaw) {
+    entityIn.setPosition(position.getX(), position.getY(), position.getZ());
+    entityIn.motionX = 0.0D;
+    entityIn.motionY = 0.0D;
+    entityIn.motionZ = 0.0D;
   }
 
   //thanks to mrbysco MIT 
