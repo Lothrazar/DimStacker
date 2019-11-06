@@ -1,5 +1,13 @@
 package com.lothrazar.dimstack;
+
+import net.minecraft.util.math.BlockPos;
+
 public class PlayerTransmit {
+
+  @Override
+  public String toString() {
+    return "PlayerTransmit [from=" + from + ", to=" + to + ", greaterThan=" + greaterThan + ", yLimit=" + yLimit + ", key=" + key + ", pos=" + pos + "]";
+  }
 
   int from = 0;
   int to = 1;
@@ -9,5 +17,5 @@ public class PlayerTransmit {
   int yLimit = 3;
   //  String door = "minecraft:bedrock"; 
   String key = "minecraft:stick";
-  public boolean setSpawnOnDestination;
+  public BlockPos pos;
 }

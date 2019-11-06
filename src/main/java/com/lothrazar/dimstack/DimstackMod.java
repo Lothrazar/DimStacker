@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
@@ -83,12 +82,14 @@ public class DimstackMod {
           logger.error("Invalid dimension from config " + t);
           return;
         }
-        StackTeleporter teleporter = new StackTeleporter(worldServer, worldServer.getSpawnCoordinate());
+        logger.error("TP to valid spawn: " + t);
+        StackTeleporter teleporter = new StackTeleporter(worldServer);
         //          teleporter.addDimensionPosition(playerMP, playerMP.dimension, playerMP.getPosition().add(0,1,0));
-        teleporter.teleportToDimension(playerMP, t.to, worldServer.getSpawnCoordinate());
-        //
-        if (t.setSpawnOnDestination) {
-          player.setSpawnChunk(new BlockPos(player), true, worldServer.provider.getDimension());
+        try {
+          teleporter.teleportToDimension(playerMP, t.to, t.pos);
+        }
+        catch (Exception e) {
+          logger.error("bad TP? ", e);
         }
         //
       }
