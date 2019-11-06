@@ -1,19 +1,16 @@
 package com.lothrazar.dimstack;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.logging.log4j.Logger;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -24,54 +21,21 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class DimstackMod {
 
   public static final String MODID = "dimstack";
-  private static Logger logger;
+  static Logger logger;
+  DimConfig config;
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
     logger = event.getModLog();
+    config = new DimConfig(new Configuration(event.getSuggestedConfigurationFile()));
   }
 
   @EventHandler
   public void init(FMLInitializationEvent event) {
     // some example code
     logger.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-    emitters.add(new PlayerTransmit());
     MinecraftForge.EVENT_BUS.register(this);
-  }
-
-  List<PlayerTransmit> emitters = new ArrayList<>();
-
-  //  from=0
-  //      to=1
-  //      topy=8
-  //      bottomy=0
-  //      door="minecraft:bedrock"
-  //      key="minecraft:stick"
-  //
-  @SubscribeEvent
-  public void onHit(PlayerInteractEvent.LeftClickBlock event) {
-    EntityPlayer player = event.getEntityPlayer();
-    ItemStack held = player.getHeldItem(event.getHand());
-    if (!held.isEmpty()) {
-      logger.info("lets go");
-      //      if (event.getFace() != null && player.isSneaking()) {
-      //        //hita block
-      //        IBlockState hit = player.world.getBlockState(event.getPos());
-      //        ModCyclic.logger.log("HIT" + hit.getBlock());
-      //        return;
-      //      }
-      //      if (ActionType.getTimeout(held) > 0) {
-      //        //without a timeout, this fires every tick. so you 'hit once' and get this happening 6 times
-      //        return;
-      //      }
-      //      ActionType.setTimeout(held);
-      //      event.setCanceled(true);
-      //      UtilSound.playSound(player, player.getPosition(), SoundRegistry.tool_mode, SoundCategory.PLAYERS);
-      //      if (!player.getEntityWorld().isRemote) { // server side
-      //        ActionType.toggle(held);
-      //        UtilChat.sendStatusMessage(player, UtilChat.lang(ActionType.getName(held)));
-      //      }
-    }
+    MinecraftForge.EVENT_BUS.register(config);
   }
 
   @SubscribeEvent
@@ -81,7 +45,7 @@ public class DimstackMod {
       EntityPlayer player = (EntityPlayer) event.getEntity();
       //ok 
       //      int dimCurrent = player.dimension;
-      for (PlayerTransmit t : this.emitters) {
+      for (PlayerTransmit t : config.emitters) {
         Item key = Item.getByNameOrId(t.key);
         if (key == null) {
           logger.error("Invalid key from config " + t);
