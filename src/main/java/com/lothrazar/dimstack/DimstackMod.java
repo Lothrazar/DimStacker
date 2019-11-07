@@ -3,8 +3,9 @@ package com.lothrazar.dimstack;
 import org.apache.logging.log4j.Logger;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,8 +32,6 @@ public class DimstackMod {
 
   @EventHandler
   public void init(FMLInitializationEvent event) {
-    // some example code
-    logger.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
     MinecraftForge.EVENT_BUS.register(this);
     MinecraftForge.EVENT_BUS.register(config);
   }
@@ -71,8 +70,18 @@ public class DimstackMod {
     }
   }
 
+  public static void sendStatusMessage(EntityPlayer player, String string) {
+    //    player.sendStatusMessage(new TextComponentTranslation(string), true);
+    player.sendMessage(new TextComponentTranslation(string));
+  }
+
+  /***
+   * relative or exact
+   * 
+   * @param player
+   * @param t
+   */
   private void goTeleport(EntityPlayer player, PlayerTransmit t) {
-    // TODO Auto-generated method stub
     World world = player.world;
     if (!player.isDead) {
       if (!world.isRemote && !player.isRiding() && !player.isBeingRidden() && player.isNonBoss()) {
@@ -82,16 +91,30 @@ public class DimstackMod {
           logger.error("Invalid dimension from config " + t);
           return;
         }
-        logger.error("TP to valid spawn: " + t);
-        StackTeleporter teleporter = new StackTeleporter(worldServer);
+        logger.info("TP to valid spawn: " + t);
         //          teleporter.addDimensionPosition(playerMP, playerMP.dimension, playerMP.getPosition().add(0,1,0));
         try {
-          teleporter.teleportToDimension(playerMP, t.to, t.pos);
+          if (t.relative) {
+            BlockPos target = player.getPosition();
+            float x = target.getX() * t.ratio;
+            float z = target.getX() * t.ratio;
+            target = new BlockPos((int) x, t.pos.getY(), (int) z);
+            StackTeleporter teleporter = new StackTeleporter(worldServer, target);
+            teleporter.teleportToDimension(playerMP, t.to);
+          }
+          else if (t.pos != null) {
+            StackTeleporter teleporter = new StackTeleporter(worldServer, t.pos);
+            teleporter.teleportToDimension(playerMP, t.to);
+          }
+          else {
+            //invalid 
+            //throw new config with invalid pos
+          }
+          sendStatusMessage(playerMP, "You have activated the dimensional rift");
         }
         catch (Exception e) {
           logger.error("bad TP? ", e);
         }
-        //
       }
     }
   }

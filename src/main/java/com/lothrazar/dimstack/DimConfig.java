@@ -14,14 +14,17 @@ public class DimConfig {
   public List<PlayerTransmit> emitters = new ArrayList<>();
   private Configuration config;
   private String[] layers;
+  private String[] layersRelative;
+  private boolean tooltips;
+
+  public boolean doTooltips() {
+    return tooltips;
+  }
 
   public DimConfig(Configuration configuration) {
     this.config = configuration;
     config.load();
     syncConfig();
-    if (config.hasChanged()) {
-      config.save();
-    }
   }
 
   @SubscribeEvent
@@ -32,41 +35,59 @@ public class DimConfig {
   }
 
   private void syncConfig() {
-    String[] def = new String[] {
-        //from overworld down to nether
-        "0,-1,<,3,minecraft:obsidian,true,0,126,0",
-        //from nether up to overworld
-        "-1,0,>,200,minecraft:dirt,false,0,5,0",
+    String cat = DimstackMod.MODID + ".extras";
+    this.tooltips = config.getBoolean("ShowTooltips", cat, true, "Show tooltips on dimensional keys");
+    config.addCustomCategoryComment(DimstackMod.MODID + ".layers", "Each row is one teleportation rift betewen dimensions");
+    this.layers = config.getStringList("TargetedTransitions", DimstackMod.MODID + ".layers", new String[] {
         //overworld up to end
-        "0,1,>,200,minecraft:ender_eye,true,0,10,0",
+        "0,1,>,200,minecraft:ender_eye,0,20,0"
+    },
+        //STRING NAME START OF ALL?
+        "Simple layer transitions that target an exact location in the destination dimension.  "
+            + "\r\nEach line is one layer transition"
+            + "\r\n[from,to,compare,yLevel,key,x,y,z]"
+            + "\r\nfrom: start dimension where key and yLimit test is used"
+            + "\r\nto: target dimension"
+            + "\r\ncompare:  < means player.y < yLimit  "
+            + "\r\nkey: item you must hold"
+    //            + "\r\n"
+    );
+    //////////////////////
+    this.layersRelative = config.getStringList("RelativeTransitions", DimstackMod.MODID + ".layers", new String[] {
+        //from overworld down to nether
+        "0,-1,<,3,minecraft:obsidian,0.125,127",
+        //from nether up to overworld
+        "-1,0,>,118,minecraft:dirt,8,8",
         //end down to overworld
-        "1,0,<,3,minecraft:wool,true,0,200,0"
-    };
-    this.layers = config.getStringList("DimensionStack", DimstackMod.MODID, def,
-        "Layers config.  Each line is one layer transition"
-            + "from,to,compare,yLevel,key,x,y,z"
-            + "from: start dimension where key and yLimit test is used"
-            + "to: target dimension"
-            + "compare:  true meansplayer.y > yLimit || false means player.y <= yLimit"
-            + "key: Player must hold this in their main hand to trigger the teleport, while passing yLimit test");
+        "1,0,<,3,minecraft:wool,1,130" },
+        "Transitions that are relative to player current position"
+            + "\r\n[from,to,compare,yLevel,key,ratio,yLanding]"
+            + "\r\nfrom: start dimension where key and yLimit test is used"
+            + "\r\nto: target dimension"
+            + "\r\ncompare:  < means player.y < yLimit  "
+            + "\r\nkey: item you must hold"
+            + "\r\nratio: what factor are x/z changed by"
+            + "\r\nyLanding: what elevation you will spawn at"
+    //            + "\r\n"
+    );
+    if (config.hasChanged()) {
+      config.save();
+    }
     this.parseEmitters();
   }
 
   private void parseEmitters() {
     this.emitters = new ArrayList<>();
     for (String layer : this.layers) {
-      try {
-        PlayerTransmit t = this.parseLayer(layer);
-        this.emitters.add(t);
-      }
-      catch (Exception e) {
-        //
-        DimstackMod.logger.error("Bad config " + layer, e);
-      }
+      this.emitters.add(this.parseLayer(layer, true));
+    }
+    for (String layer : this.layersRelative) {
+      this.emitters.add(this.parseLayer(layer, false));
     }
   }
 
-  private PlayerTransmit parseLayer(String layer) throws Exception {
+  private PlayerTransmit parseLayer(String layer, boolean useBlockPos) {
+    DimstackMod.logger.info("config parsing :" + layer);
     String[] lrs = layer.split(",");
     PlayerTransmit t = new PlayerTransmit();
     t.from = Integer.parseInt(lrs[0]);
@@ -74,10 +95,20 @@ public class DimConfig {
     t.greaterThan = ">".equalsIgnoreCase(lrs[2]);
     t.yLimit = Integer.parseInt(lrs[3]);
     t.key = lrs[4];
-    int x = Integer.parseInt(lrs[5]),
-        y = Integer.parseInt(lrs[6]),
-        z = Integer.parseInt(lrs[7]);
-    t.pos = new BlockPos(x, y, z);
+    if (useBlockPos) {
+      int x = Integer.parseInt(lrs[5]),
+          y = Integer.parseInt(lrs[6]),
+          z = Integer.parseInt(lrs[7]);
+      t.pos = new BlockPos(x, y, z);
+      t.relative = false;
+      t.ratio = 1;//ignored in this case
+    }
+    else {
+      t.relative = true;
+      t.ratio = Float.parseFloat(lrs[5]);
+      int y = Integer.parseInt(lrs[6]);
+      t.pos = new BlockPos(0, y, 0);//0's set by relative to player
+    }
     return t;
   }
 }
