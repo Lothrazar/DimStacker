@@ -37,42 +37,31 @@ public class DimConfig {
   private void syncConfig() {
     String cat = DimstackMod.MODID + ".extras";
     this.tooltips = config.getBoolean("ShowTooltips", cat, true, "Show tooltips on dimensional keys");
-    config.addCustomCategoryComment(DimstackMod.MODID + ".layers", "Each row is one teleportation rift betewen dimensions");
-    this.layers = config.getStringList("TargetedTransitions", DimstackMod.MODID + ".layers", new String[] {
+    cat = DimstackMod.MODID + ".layers";
+    config.addCustomCategoryComment(cat, "Each row is one teleportation rift betewen dimensions"
+        + "\r\nto: start dimension where item and tests are ran"
+        + "\r\nfrom: destination"
+        + "\r\ncompare:  < means player.y < yLimit  "
+        + "\r\nkey: what you must hold");
+    this.layers = config.getStringList("TargetedTransitions", cat, new String[] {
         //overworld up to end
         "0,1,>,200,minecraft:ender_eye,0,20,0"
     },
-        //STRING NAME START OF ALL?
-        "Simple layer transitions that target an exact location in the destination dimension.  "
-            + "\r\nEach line is one layer transition"
-            + "\r\n[from,to,compare,yLevel,key,x,y,z]"
-            + "\r\nfrom: start dimension where key and yLimit test is used"
-            + "\r\nto: target dimension"
-            + "\r\ncompare:  < means player.y < yLimit  "
-            + "\r\nkey: item you must hold"
-    //            + "\r\n"
-    );
+        "Simple layer transitions that target an exact location in the destination dimension.  ");
     //////////////////////
-    this.layersRelative = config.getStringList("RelativeTransitions", DimstackMod.MODID + ".layers", new String[] {
+    this.layersRelative = config.getStringList("RelativeTransitions", cat, new String[] {
         //from overworld down to nether
         "0,-1,<,3,minecraft:obsidian,0.125,120",
         //from nether up to overworld
         "-1,0,>,118,minecraft:dirt,8,8",
         //end down to overworld
         "1,0,<,3,minecraft:wool:3,1,130" },
-        "Transitions that are relative to player current position"
-            + "\r\n[from,to,compare,yLevel,key,ratio,yLanding]"
-            + "\r\nfrom: start dimension where key and yLimit test is used"
-            + "\r\nto: target dimension"
-            + "\r\ncompare:  < means player.y < yLimit  "
-            + "\r\nkey: item you must hold"
-            + "\r\nratio: what factor are x/z changed by"
-            + "\r\nyLanding: what elevation you will spawn at"
+        "Transitions that are relative to player current position.  Ratio is similar to nether where x&z relative to player."
     //            + "\r\n"
     );
-    if (config.hasChanged()) {
-      config.save();
-    }
+    //    if (config.hasChanged()) {
+    config.save();
+    //    } 
     this.parseEmitters();
   }
 
