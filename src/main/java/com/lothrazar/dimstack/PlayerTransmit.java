@@ -8,7 +8,7 @@ public class PlayerTransmit {
 
   @Override
   public String toString() {
-    return "PlayerTransmit [from=" + from + ", to=" + to + ", greaterThan=" + greaterThan + ", yLimit=" + yLimit + ", key=" + key + ", pos=" + pos + "]";
+    return "[from=" + from + ", to=" + to + ", yLimit=" + yLimit + ", key=" + key + ", pos=" + pos + "]";
   }
 
   int from = 0;
@@ -24,4 +24,5 @@ public class PlayerTransmit {
   public BlockPos pos;
   public boolean relative = false;
   public float ratio = 1;
+  public int keyMeta;
 }

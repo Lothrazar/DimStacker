@@ -55,11 +55,11 @@ public class DimConfig {
     //////////////////////
     this.layersRelative = config.getStringList("RelativeTransitions", DimstackMod.MODID + ".layers", new String[] {
         //from overworld down to nether
-        "0,-1,<,3,minecraft:obsidian,0.125,127",
+        "0,-1,<,3,minecraft:obsidian,0.125,120",
         //from nether up to overworld
         "-1,0,>,118,minecraft:dirt,8,8",
         //end down to overworld
-        "1,0,<,3,minecraft:wool,1,130" },
+        "1,0,<,3,minecraft:wool:3,1,130" },
         "Transitions that are relative to player current position"
             + "\r\n[from,to,compare,yLevel,key,ratio,yLanding]"
             + "\r\nfrom: start dimension where key and yLimit test is used"
@@ -108,6 +108,13 @@ public class DimConfig {
       t.ratio = Float.parseFloat(lrs[5]);
       int y = Integer.parseInt(lrs[6]);
       t.pos = new BlockPos(0, y, 0);//0's set by relative to player
+    }
+    String[] tkns = t.key.split(":");
+    int test = tkns.length;
+    t.keyMeta = 0;
+    if (test >= 3) {
+      t.keyMeta = Integer.parseInt(t.key.split(":")[2]);
+      t.key = tkns[0] + ":" + tkns[1];
     }
     return t;
   }

@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -37,6 +38,21 @@ public class DimstackMod {
   }
 
   @SubscribeEvent
+  public void onItemTooltipEvent(ItemTooltipEvent event) {
+    //
+    if (config.doTooltips())
+      for (PlayerTransmit t : config.emitters) {
+        if (t.keyCached != null && t.keyCached == event.getItemStack().getItem()
+            && t.keyMeta == event.getItemStack().getMetadata()) {
+          //
+          event.getToolTip().add("Dimensional keystone");
+          if (event.getFlags().isAdvanced())
+            event.getToolTip().add(t.toString());
+        }
+      }
+  }
+
+  @SubscribeEvent
   public void playerTick(PlayerEvent.LivingUpdateEvent event) {
     //
     if (event.getEntity() instanceof EntityPlayer) {
@@ -44,16 +60,18 @@ public class DimstackMod {
       //ok 
       //      int dimCurrent = player.dimension;
       for (PlayerTransmit t : config.emitters) {
-        Item key = Item.getByNameOrId(t.key);
-        if (key == null) {
-          logger.error("Invalid key from config " + t);
+        if (t.keyCached == null) {
+          Item key = Item.getByNameOrId(t.key);
+          if (key == null) {
+            logger.error("Invalid key from config " + t);
+            continue;
+          }
+          t.keyCached = key;//save backup
+        }
+        if (player.getHeldItemMainhand().getItem() != t.keyCached
+            || player.getHeldItemMainhand().getMetadata() != t.keyMeta) {
           continue;
         }
-        if (player.getHeldItemMainhand().getItem() != key) {
-          continue;
-        }
-        //
-        //
         int playerY = player.getPosition().getY();
         if (t.from == player.dimension) {
           //ok maybve we go here
