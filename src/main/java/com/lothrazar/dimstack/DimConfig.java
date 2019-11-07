@@ -47,7 +47,7 @@ public class DimConfig {
         //overworld up to end
         "0,1,>,200,minecraft:ender_eye,0,20,0"
     },
-        "Simple layer transitions that target an exact location in the destination dimension.  ");
+        "Simple layer transitions that target an exact location in the destination dimension.  [from,to,compare,ylimit,key,positionxyz]  ");
     //////////////////////
     this.layersRelative = config.getStringList("RelativeTransitions", cat, new String[] {
         //from overworld down to nether
@@ -56,7 +56,7 @@ public class DimConfig {
         "-1,0,>,118,minecraft:dirt,8,8",
         //end down to overworld
         "1,0,<,3,minecraft:wool:3,1,130" },
-        "Transitions that are relative to player current position.  Ratio is similar to nether where x&z relative to player."
+        "Transitions that are relative to player current position.  Ratio is similar to nether where x&z relative to player.  [from,to,compare,ylimit,key,multiplier,ylanding]"
     //            + "\r\n"
     );
     //    if (config.hasChanged()) {

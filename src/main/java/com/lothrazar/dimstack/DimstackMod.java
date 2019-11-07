@@ -17,6 +17,8 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = DimstackMod.MODID)
 public class DimstackMod {
@@ -37,6 +39,7 @@ public class DimstackMod {
     MinecraftForge.EVENT_BUS.register(config);
   }
 
+  @SideOnly(Side.CLIENT)
   @SubscribeEvent
   public void onItemTooltipEvent(ItemTooltipEvent event) {
     //
