@@ -48,7 +48,7 @@ public class DimstackMod {
         if (t.keyCached != null && t.keyCached == event.getItemStack().getItem()
             && t.keyMeta == event.getItemStack().getMetadata()) {
           //
-          event.getToolTip().add("Dimensional keystone");
+          event.getToolTip().add("Dimensional keystone [" + t.from + "," + t.to + "]");
           if (event.getFlags().isAdvanced())
             event.getToolTip().add(t.toString());
         }
