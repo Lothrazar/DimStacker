@@ -16,9 +16,14 @@ public class DimConfig {
   private String[] layers;
   private String[] layersRelative;
   private boolean tooltips;
+  private boolean chatmessage;
 
   public boolean doTooltips() {
     return tooltips;
+  }
+
+  public boolean doChatMessage() {
+    return chatmessage;
   }
 
   public DimConfig(Configuration configuration) {
@@ -37,6 +42,7 @@ public class DimConfig {
   private void syncConfig() {
     String cat = DimstackMod.MODID + ".extras";
     this.tooltips = config.getBoolean("ShowTooltips", cat, true, "Show tooltips on dimensional keys");
+    this.chatmessage = config.getBoolean("ShowChatOnTeleport", cat, true, "Show chat message on rift use");
     cat = DimstackMod.MODID + ".layers";
     config.addCustomCategoryComment(cat, "Each row is one teleportation rift betewen dimensions"
         + "\r\nto: start dimension where item and tests are ran"

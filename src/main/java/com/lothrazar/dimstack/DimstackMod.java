@@ -147,7 +147,9 @@ public class DimstackMod {
             StackTeleporter teleporter = new StackTeleporter(worldServer, t.pos);
             teleporter.teleportToDimension(playerMP, t.to);
           }
-          sendStatusMessage(playerMP, "You have activated the dimensional rift " + TextFormatting.BLACK + Integer.toHexString(t.hashCode()));
+          if (this.config.doChatMessage()) {
+            sendStatusMessage(playerMP, "You have activated the dimensional rift " + TextFormatting.BLACK + Integer.toHexString(t.hashCode()));
+          }
         }
         catch (Exception e) {
           logger.error("bad TP? ", e);
