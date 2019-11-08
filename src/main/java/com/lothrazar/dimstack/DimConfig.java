@@ -42,7 +42,7 @@ public class DimConfig {
         + "\r\nto: start dimension where item and tests are ran"
         + "\r\nfrom: destination"
         + "\r\ncompare:  < means player.y < yLimit  "
-        + "\r\nkey: what you must hold");
+        + "\r\nkey: what you must hold.  Empty for no item check");
     this.layers = config.getStringList("TargetedTransitions", cat, new String[] {
         //overworld up to end
         "0,1,>,200,minecraft:ender_eye,0,20,0"
@@ -84,6 +84,18 @@ public class DimConfig {
     t.greaterThan = ">".equalsIgnoreCase(lrs[2]);
     t.yLimit = Integer.parseInt(lrs[3]);
     t.key = lrs[4];
+    if (t.key == null || t.key.isEmpty() || t.key.equalsIgnoreCase("null")) {
+      t.key = null;
+    }
+    else {
+      String[] tkns = t.key.split(":");
+      int test = tkns.length;
+      t.keyMeta = 0;
+      if (test >= 3) {
+        t.keyMeta = Integer.parseInt(t.key.split(":")[2]);
+        t.key = tkns[0] + ":" + tkns[1];
+      }
+    }
     if (useBlockPos) {
       int x = Integer.parseInt(lrs[5]),
           y = Integer.parseInt(lrs[6]),
@@ -97,13 +109,6 @@ public class DimConfig {
       t.ratio = Float.parseFloat(lrs[5]);
       int y = Integer.parseInt(lrs[6]);
       t.pos = new BlockPos(0, y, 0);//0's set by relative to player
-    }
-    String[] tkns = t.key.split(":");
-    int test = tkns.length;
-    t.keyMeta = 0;
-    if (test >= 3) {
-      t.keyMeta = Integer.parseInt(t.key.split(":")[2]);
-      t.key = tkns[0] + ":" + tkns[1];
     }
     return t;
   }

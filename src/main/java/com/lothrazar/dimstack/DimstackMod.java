@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
@@ -48,11 +49,16 @@ public class DimstackMod {
         if (t.keyCached != null && t.keyCached == event.getItemStack().getItem()
             && t.keyMeta == event.getItemStack().getMetadata()) {
           //
-          event.getToolTip().add("Dimensional keystone [" + t.from + "," + t.to + "]");
+          TextFormatting f = this.getTextColour(t, event.getEntityPlayer());
+          event.getToolTip().add(f + "Dimensional keystone [" + t.from + "," + t.to + "]");
           if (event.getFlags().isAdvanced())
             event.getToolTip().add(t.toString());
         }
       }
+  }
+
+  private TextFormatting getTextColour(PlayerTransmit t, EntityPlayer entityPlayer) {
+    return TextFormatting.GRAY;
   }
 
   @SubscribeEvent
@@ -63,7 +69,7 @@ public class DimstackMod {
       //ok 
       //      int dimCurrent = player.dimension;
       for (PlayerTransmit t : config.emitters) {
-        if (t.keyCached == null) {
+        if (t.keyCached == null && t.key != null) {
           Item key = Item.getByNameOrId(t.key);
           if (key == null) {
             logger.error("Invalid key from config " + t);
@@ -71,9 +77,11 @@ public class DimstackMod {
           }
           t.keyCached = key;//save backup
         }
-        if (player.getHeldItemMainhand().getItem() != t.keyCached
-            || player.getHeldItemMainhand().getMetadata() != t.keyMeta) {
-          continue;
+        if (t.key != null) {
+          if (player.getHeldItemMainhand().getItem() != t.keyCached
+              || player.getHeldItemMainhand().getMetadata() != t.keyMeta) {
+            continue;
+          }
         }
         int playerY = player.getPosition().getY();
         if (t.from == player.dimension) {
