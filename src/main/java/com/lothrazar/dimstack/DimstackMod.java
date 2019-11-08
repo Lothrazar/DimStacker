@@ -1,6 +1,7 @@
 package com.lothrazar.dimstack;
 
 import org.apache.logging.log4j.Logger;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -50,12 +51,17 @@ public class DimstackMod {
             && t.keyMeta == event.getItemStack().getMetadata()) {
           //
           TextFormatting f = this.getTextColour(t, event.getEntityPlayer());
-          event.getToolTip().add(f + "Dimensional keystone [" + t.from + "," + t.to + "]");
+          event.getToolTip().add(f + lang(MODID + ".tooltip") + " [" + t.from + "," + t.to + "]");
           if (event.getFlags().isAdvanced()) {
             event.getToolTip().add(t.toString());
           }
         }
       }
+  }
+
+  @SideOnly(Side.CLIENT)
+  public static String lang(String message) {
+    return I18n.format(message);
   }
 
   private TextFormatting getTextColour(PlayerTransmit t, EntityPlayer player) {
@@ -146,7 +152,8 @@ public class DimstackMod {
             teleporter.teleportToDimension(playerMP, t.to);
           }
           if (this.config.doChatMessage()) {
-            sendStatusMessage(playerMP, "You have activated the dimensional rift " + TextFormatting.BLACK + Integer.toHexString(t.hashCode()));
+            sendStatusMessage(playerMP, TextFormatting.BLACK + Integer.toHexString(t.hashCode()) +
+                TextFormatting.WHITE + " rift activated");
           }
         }
         catch (Exception e) {
