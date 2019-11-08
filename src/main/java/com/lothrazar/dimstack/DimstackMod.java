@@ -62,7 +62,7 @@ public class DimstackMod {
       return TextFormatting.GRAY;
     }
     int playerY = player.getPosition().getY();
-    int buffer = 10;
+    int buffer = t.yLimit;
     if (Math.abs(playerY - t.yLimit) < buffer) {
       return TextFormatting.RED;
     }
