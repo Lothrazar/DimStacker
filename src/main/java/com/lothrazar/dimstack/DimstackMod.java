@@ -63,13 +63,11 @@ public class DimstackMod {
       return TextFormatting.GRAY;
     }
     int playerY = player.getPosition().getY();
-    int buffer = t.yLimit;
-    if (Math.abs(playerY - t.yLimit) < buffer) {
-      return TextFormatting.RED;
+    if (Math.abs(playerY - t.yLimit) < config.getRedDistance()) {
+      return TextFormatting.DARK_RED;
     }
-    //ok maybve we go here
-    if (Math.abs(playerY - t.yLimit) < buffer * 2) {
-      return TextFormatting.GOLD;
+    if (Math.abs(playerY - t.yLimit) < config.getOrangeDistance()) {
+      return TextFormatting.LIGHT_PURPLE;
     }
     return TextFormatting.GRAY;
   }

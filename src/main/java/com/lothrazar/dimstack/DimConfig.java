@@ -17,6 +17,8 @@ public class DimConfig {
   private String[] layersRelative;
   private boolean tooltips;
   private boolean chatmessage;
+  private int orangedistance;
+  private int reddistance;
 
   public boolean doTooltips() {
     return tooltips;
@@ -43,6 +45,8 @@ public class DimConfig {
     String cat = DimstackMod.MODID + ".extras";
     this.tooltips = config.getBoolean("ShowTooltips", cat, true, "Show tooltips on dimensional keys");
     this.chatmessage = config.getBoolean("ShowChatOnTeleport", cat, true, "Show chat message on rift use");
+    this.reddistance = config.getInt("TooltipCloseDistance", cat, 8, 1, 128, "How far away from the rift will your keystone item tooltip change colour for being very close");
+    this.orangedistance = config.getInt("TooltipFurtherDistance", cat, 16, 1, 128, "How far away from the rift will your keystone item tooltip change colour for being kinda close");
     cat = DimstackMod.MODID + ".layers";
     config.addCustomCategoryComment(cat, "Each row is one teleportation rift betewen dimensions"
         + "\r\nto: start dimension where item and tests are ran"
@@ -117,5 +121,13 @@ public class DimConfig {
       t.pos = new BlockPos(0, y, 0);//0's set by relative to player
     }
     return t;
+  }
+
+  public int getRedDistance() {
+    return this.reddistance;
+  }
+
+  public int getOrangeDistance() {
+    return this.orangedistance;
   }
 }
