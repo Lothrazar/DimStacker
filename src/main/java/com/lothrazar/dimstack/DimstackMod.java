@@ -51,14 +51,15 @@ public class DimstackMod {
           //
           TextFormatting f = this.getTextColour(t, event.getEntityPlayer());
           event.getToolTip().add(f + "Dimensional keystone [" + t.from + "," + t.to + "]");
-          if (event.getFlags().isAdvanced())
+          if (event.getFlags().isAdvanced()) {
             event.getToolTip().add(t.toString());
+          }
         }
       }
   }
 
   private TextFormatting getTextColour(PlayerTransmit t, EntityPlayer player) {
-    if (t.from != player.dimension) {
+    if (player == null || t == null || t.from != player.dimension) {
       return TextFormatting.GRAY;
     }
     int playerY = player.getPosition().getY();
@@ -132,8 +133,7 @@ public class DimstackMod {
           logger.error("Invalid dimension from config " + t);
           return;
         }
-        logger.info("TP to valid spawn: " + t);
-        //          teleporter.addDimensionPosition(playerMP, playerMP.dimension, playerMP.getPosition().add(0,1,0));
+        //        logger.info("TP to valid spawn: " + t);
         try {
           if (t.relative) {
             BlockPos target = player.getPosition();
@@ -147,11 +147,7 @@ public class DimstackMod {
             StackTeleporter teleporter = new StackTeleporter(worldServer, t.pos);
             teleporter.teleportToDimension(playerMP, t.to);
           }
-          else {
-            //invalid 
-            //throw new config with invalid pos
-          }
-          sendStatusMessage(playerMP, "You have activated the dimensional rift");
+          sendStatusMessage(playerMP, "You have activated the dimensional rift " + TextFormatting.BLACK + Integer.toHexString(t.hashCode()));
         }
         catch (Exception e) {
           logger.error("bad TP? ", e);
