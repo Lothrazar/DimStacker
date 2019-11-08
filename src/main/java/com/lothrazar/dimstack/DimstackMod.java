@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = DimstackMod.MODID)
+@Mod(modid = DimstackMod.MODID, updateJSON = "https://raw.githubusercontent.com/Lothrazar/DimStacker/master/update.json")
 public class DimstackMod {
 
   public static final String MODID = "dimstack";
@@ -57,7 +57,19 @@ public class DimstackMod {
       }
   }
 
-  private TextFormatting getTextColour(PlayerTransmit t, EntityPlayer entityPlayer) {
+  private TextFormatting getTextColour(PlayerTransmit t, EntityPlayer player) {
+    if (t.from != player.dimension) {
+      return TextFormatting.GRAY;
+    }
+    int playerY = player.getPosition().getY();
+    int buffer = 10;
+    if (Math.abs(playerY - t.yLimit) < buffer) {
+      return TextFormatting.RED;
+    }
+    //ok maybve we go here
+    if (Math.abs(playerY - t.yLimit) < buffer * 2) {
+      return TextFormatting.GOLD;
+    }
     return TextFormatting.GRAY;
   }
 

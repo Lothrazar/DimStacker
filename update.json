@@ -1,0 +1,11 @@
+{
+  "homepage": "https://www.curseforge.com/minecraft/mc-mods/dimension-stacking-rifts",
+  "promos": {
+    "1.12.2-latest": "0.0.2",
+    "1.12.2-recommended": "0.0.2"
+  },
+  "1.12.2":{
+	"0.0.1":"First release.  Dimensional rifts work hooked to config, items have tooltips.",
+	"0.0.2":"Rifts allowed with no item in config, to disable all checks so anything goes.   Tooltip on items starts light grey, but gets orange or red if you are close.  "
+  }
+}
