@@ -1,7 +1,6 @@
 package com.lothrazar.dimstack;
 
 import java.util.List;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +11,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -42,7 +42,18 @@ public class KeyItem extends Item {
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flagIn) {
 		for (PlayerTransmit t : DimstackMod.config.emitters) {
-			if (t.keyMeta == stack.getMetadata()) tooltip.add(DimstackMod.lang(DimstackMod.MODID + ".tooltip") + " [" + t.from + "," + t.to + "]");
+			if (t.keyMeta == stack.getMetadata()) {
+        DimensionType from = DimensionType.getById(t.from);
+        DimensionType to = DimensionType.getById(t.to);
+        String fromstr = t.from + "";
+        String tostr = t.to + "";
+        if (from != null) {
+          fromstr = from.getName();
+        }
+        if (to != null) {
+          tostr = to.getName();
+        }
+			  tooltip.add(DimstackMod.lang(DimstackMod.MODID + ".tooltip") + " [" + fromstr+"/"+tostr+ "]");}
 		}
 	}
 
