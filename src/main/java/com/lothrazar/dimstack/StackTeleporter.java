@@ -1,7 +1,5 @@
 package com.lothrazar.dimstack;
 
-import java.util.function.Predicate;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,8 +16,6 @@ import net.minecraft.world.WorldServer;
 //thanks to mrbysco MIT
 //https://github.com/Mrbysco/TelePastries/blob/044fd1b78a43cca9fbbc7a4bf07599dcde1d0c7c/src/main/java/com/mrbysco/telepastries/util/CakeTeleporter.java
 public class StackTeleporter extends Teleporter {
-
-	public static final Predicate<IBlockState> BR_OR_PORTAL = s -> s.getBlock() == Blocks.BEDROCK || s.getBlock() == DimstackMod.PORTAL;
 
 	private BlockPos position;
 	private PortalTile tile;
@@ -38,6 +34,7 @@ public class StackTeleporter extends Teleporter {
 		if (!exact) {
 			this.createSafetyBox(player, position);
 			teleport(player, dimension, position.getX() + 1.3D, position.getY() + (!tile.top ? -3 : 1), position.getZ() + 1.3D);
+			world.setBlockState(player.getPosition().down(), Blocks.GLOWSTONE.getDefaultState());
 		} else {
 			for (int x = -1; x <= 1; x++) {
 				for (int z = -1; z <= 1; z++) {
@@ -80,7 +77,6 @@ public class StackTeleporter extends Teleporter {
 	 * Attempts to create the stone brick box surrounding the portal itself.
 	 */
 	private void createSafetyBox(EntityPlayerMP playerIn, BlockPos position) {
-
 		if (tile.target.equals(PortalTile.UNLINKED)) {
 			if (tile.top) {
 				position = new BlockPos(position.getX(), 0, position.getZ());
@@ -131,10 +127,11 @@ public class StackTeleporter extends Teleporter {
 
 			for (int x = -1; x <= 1; x++) {
 				for (int z = -1; z <= 1; z++) {
-					if (!(x == 0 && z == 0)) world.setBlockState(position.add(x, 0, z), Blocks.STONEBRICK.getDefaultState());
-					world.setBlockState(position.add(x, !tile.top ? -4 : 4, z), Blocks.STONEBRICK.getDefaultState());
+					if (!(x == 0 && z == 0)) world.setBlockState(position.add(x, 0, z), Blocks.GLOWSTONE.getDefaultState());
+					world.setBlockState(position.add(x, !tile.top ? -4 : 4, z), Blocks.GLOWSTONE.getDefaultState());
 				}
 			}
+
 		}
 
 		world.setBlockState(position, DimstackMod.PORTAL.getDefaultState());
