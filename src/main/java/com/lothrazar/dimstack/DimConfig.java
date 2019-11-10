@@ -2,7 +2,6 @@ package com.lothrazar.dimstack;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -22,12 +21,7 @@ public class DimConfig {
 	private Configuration config;
 	private String[] layers;
 	private String[] layersRelative;
-	private boolean tooltips;
-
-	public boolean doTooltips() {
-		return tooltips;
-	}
-
+	 
 	public DimConfig(Configuration configuration) {
 		this.config = configuration;
 		syncConfig();
@@ -41,9 +35,7 @@ public class DimConfig {
 	}
 
 	private void syncConfig() {
-		String cat = DimstackMod.MODID + ".extras";
-		this.tooltips = config.getBoolean("ShowTooltips", cat, true, "Show tooltips on dimensional keys");
-		cat = DimstackMod.MODID + ".layers";
+		String  cat = DimstackMod.MODID + ".layers";
 		config.addCustomCategoryComment(cat, "Each row is one teleportation rift betewen dimensions" + "\r\nto: start dimension where item and tests are ran" + "\r\nfrom: destination" + "\r\ncompare:  < means player.y < yLimit  " + "\r\nkey: what you must hold.  Empty for no item check");
 		this.layers = config.getStringList("TargetedTransitions", cat, new String[] { "0,1,>,200,3,0,20,0" }, "Simple layer transitions that target an exact location in the destination dimension.  [from,to,compare,ylimit,key meta,positionxyz]  ");
 
