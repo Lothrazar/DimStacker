@@ -37,7 +37,7 @@ public class StackTeleporter extends Teleporter {
 		}
 		if (!exact) {
 			this.createSafetyBox(player, position);
-			teleport(player, dimension, position.getX() + 1.5D, position.getY() + (!tile.top ? -3 : 1), position.getZ() + 1.5D);
+			teleport(player, dimension, position.getX() + 1.3D, position.getY() + (!tile.top ? -3 : 1), position.getZ() + 1.3D);
 		} else {
 			for (int x = -1; x <= 1; x++) {
 				for (int z = -1; z <= 1; z++) {
@@ -76,8 +76,9 @@ public class StackTeleporter extends Teleporter {
 		entityIn.motionZ = 0.0D;
 	}
 
-	//thanks to mrbysco MIT
-	//https://github.com/Mrbysco/TelePastries/blob/044fd1b78a43cca9fbbc7a4bf07599dcde1d0c7c/src/main/java/com/mrbysco/telepastries/util/CakeTeleporter.java
+	/**
+	 * Attempts to create the stone brick box surrounding the portal itself.
+	 */
 	private void createSafetyBox(EntityPlayerMP playerIn, BlockPos position) {
 
 		if (tile.target.equals(PortalTile.UNLINKED)) {
