@@ -36,6 +36,7 @@ public class KeyItem extends Item {
 			PortalTile tile = (PortalTile) world.getTileEntity(pos);
 			tile.top = t.greaterThan;
 			player.getCooldownTracker().setCooldown(this, 300);
+			player.getHeldItem(hand).shrink(1);
 			return EnumActionResult.SUCCESS;
 		}
 		return EnumActionResult.FAIL;

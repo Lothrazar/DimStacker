@@ -36,8 +36,8 @@ public class PortalBlock extends Block {
 		if (entity instanceof EntityPlayerMP && !entity.isDead) {
 			if (!world.isRemote && !entity.isRiding() && !entity.isBeingRidden() && entity.isNonBoss()) {
 				EntityPlayerMP playerMP = (EntityPlayerMP) entity;
-				PlayerTransmit t = DimstackMod.getTargetFor(world, pos);
 				PortalTile tile = (PortalTile) world.getTileEntity(pos);
+				PlayerTransmit t = DimstackMod.getTargetFor(tile);
 				if (t == null || tile == null) return;
 				WorldServer targetDim = playerMP.getServer().getWorld(t.to);
 				try {

@@ -11,6 +11,7 @@ public class PortalTile extends TileEntity {
 	public BlockPos target = UNLINKED;
 	public int targetDim = 0;
 	public boolean top = false;
+	public boolean builtStruct = false;
 
 	public PortalTile() {
 
@@ -21,6 +22,7 @@ public class PortalTile extends TileEntity {
 		target = BlockPos.fromLong(tag.getLong("target"));
 		targetDim = tag.getInteger("targetdim");
 		top = tag.getBoolean("top");
+		builtStruct = tag.getBoolean("struct");
 		super.readFromNBT(tag);
 	}
 
@@ -29,6 +31,7 @@ public class PortalTile extends TileEntity {
 		tag.setLong("target", target.toLong());
 		tag.setInteger("targetdim", targetDim);
 		tag.setBoolean("top", top);
+		tag.setBoolean("struct", builtStruct);
 		return super.writeToNBT(tag);
 	}
 

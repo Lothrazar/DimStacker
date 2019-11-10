@@ -93,4 +93,19 @@ public class DimstackMod {
 		return null;
 	}
 
+	/**
+	 * Gets the transmit handler for a given location.
+	 */
+	@Nullable
+	public static PlayerTransmit getTargetFor(PortalTile tile) {
+		for (PlayerTransmit t : DimstackMod.config.transmits) {
+			if (t.from == tile.getWorld().provider.getDimension()) {
+				if (t.greaterThan && tile.top) {
+					return t;
+				} else if (!t.greaterThan && !tile.top) { return t; }
+			}
+		}
+		return null;
+	}
+
 }

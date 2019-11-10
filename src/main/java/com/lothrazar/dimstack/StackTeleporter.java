@@ -86,7 +86,7 @@ public class StackTeleporter extends Teleporter {
 				position = new BlockPos(position.getX(), 0, position.getZ());
 				IBlockState state = world.getBlockState(position);
 				while (true) {
-					if (position.getY() == 255 || state.getBlock() == Blocks.BEDROCK && world.getBlockState(position.up()).getBlock() != Blocks.BEDROCK || state.getBlock() == DimstackMod.PORTAL) {
+					if (position.getY() >= 255 || state.getBlock() == Blocks.BEDROCK && world.getBlockState(position.up()).getBlock() != Blocks.BEDROCK || state.getBlock() == DimstackMod.PORTAL) {
 						break;
 					}
 					state = world.getBlockState(position = position.up());
@@ -95,7 +95,7 @@ public class StackTeleporter extends Teleporter {
 				position = new BlockPos(position.getX(), world.getActualHeight(), position.getZ());
 				IBlockState state = world.getBlockState(position);
 				while (true) {
-					if (position.getY() == 0 || state.getBlock() != Blocks.AIR && state.getBlock() != Blocks.BEDROCK || state.getBlock() == DimstackMod.PORTAL) {
+					if (position.getY() <= 0 || state.getBlock() != Blocks.AIR && state.getBlock() != Blocks.BEDROCK || state.getBlock() == DimstackMod.PORTAL) {
 						break;
 					}
 					state = world.getBlockState(position = position.down());
@@ -103,34 +103,37 @@ public class StackTeleporter extends Teleporter {
 			}
 		} else position = tile.target;
 
-		for (int x = -2; x <= 2; x++) {
-			for (int z = -2; z <= 2; z++) {
-				if (tile.top) {
-					for (int y = 0; y <= 4; y++)
-						world.setBlockState(position.add(x, y, z), Blocks.STONEBRICK.getDefaultState());
-				} else {
-					for (int y = -4; y <= 0; y++)
-						world.setBlockState(position.add(x, y, z), Blocks.STONEBRICK.getDefaultState());
+		if (!tile.builtStruct) {
+
+			for (int x = -2; x <= 2; x++) {
+				for (int z = -2; z <= 2; z++) {
+					if (tile.top) {
+						for (int y = 0; y <= 4; y++)
+							if (!(x == 0 && z == 0 && y == 0)) world.setBlockState(position.add(x, y, z), Blocks.STONEBRICK.getDefaultState());
+					} else {
+						for (int y = -4; y <= 0; y++)
+							if (!(x == 0 && z == 0 && y == 0)) world.setBlockState(position.add(x, y, z), Blocks.STONEBRICK.getDefaultState());
+					}
 				}
 			}
-		}
 
-		for (int x = -1; x <= 1; x++) {
-			for (int z = -1; z <= 1; z++) {
-				if (tile.top) {
-					for (int y = 0; y <= 4; y++)
-						world.setBlockState(position.add(x, y, z), Blocks.AIR.getDefaultState());
-				} else {
-					for (int y = -4; y <= 0; y++)
-						world.setBlockState(position.add(x, y, z), Blocks.AIR.getDefaultState());
+			for (int x = -1; x <= 1; x++) {
+				for (int z = -1; z <= 1; z++) {
+					if (tile.top) {
+						for (int y = 0; y <= 4; y++)
+							if (!(x == 0 && z == 0 && y == 0)) world.setBlockState(position.add(x, y, z), Blocks.AIR.getDefaultState());
+					} else {
+						for (int y = -4; y <= 0; y++)
+							if (!(x == 0 && z == 0 && y == 0)) world.setBlockState(position.add(x, y, z), Blocks.AIR.getDefaultState());
+					}
 				}
 			}
-		}
 
-		for (int x = -1; x <= 1; x++) {
-			for (int z = -1; z <= 1; z++) {
-				world.setBlockState(position.add(x, 0, z), Blocks.STONEBRICK.getDefaultState());
-				world.setBlockState(position.add(x, !tile.top ? -4 : 4, z), Blocks.STONEBRICK.getDefaultState());
+			for (int x = -1; x <= 1; x++) {
+				for (int z = -1; z <= 1; z++) {
+					if (!(x == 0 && z == 0)) world.setBlockState(position.add(x, 0, z), Blocks.STONEBRICK.getDefaultState());
+					world.setBlockState(position.add(x, !tile.top ? -4 : 4, z), Blocks.STONEBRICK.getDefaultState());
+				}
 			}
 		}
 
@@ -141,6 +144,7 @@ public class StackTeleporter extends Teleporter {
 		dest.targetDim = tile.getWorld().provider.getDimension();
 		tile.target = dest.getPos();
 		tile.targetDim = dest.getWorld().provider.getDimension();
+		tile.builtStruct = true;
 
 		this.position = tile.target;
 	}
