@@ -10,6 +10,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 
@@ -34,6 +36,8 @@ public class StackTeleporter extends Teleporter {
 		if (!exact) {
 			this.createSafetyBox(player, position);
 			teleport(player, dimension, position.getX() + 1.3D, position.getY() + (!tile.top ? -3 : 1), position.getZ() + 1.3D);
+			TextComponentTranslation to = new TextComponentTranslation("dimstack." + DimensionType.getById(dimension).getName() + ".name");
+			player.sendMessage(new TextComponentTranslation("dimstack.teleport.info", to));
 			world.setBlockState(player.getPosition().down(), Blocks.GLOWSTONE.getDefaultState());
 		} else {
 			for (int x = -1; x <= 1; x++) {
@@ -47,6 +51,8 @@ public class StackTeleporter extends Teleporter {
 						world.setBlockState(position.add(x, y, z), Blocks.AIR.getDefaultState());
 				}
 			}
+			TextComponentTranslation to = new TextComponentTranslation("dimstack." + DimensionType.getById(dimension).getName() + ".name");
+			player.sendMessage(new TextComponentTranslation("dimstack.teleport.info", to));
 			teleport(player, dimension, position.getX() + 0.5, position.getY() + 1, position.getZ() + 0.5);
 		}
 	}

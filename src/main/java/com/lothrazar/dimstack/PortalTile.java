@@ -35,4 +35,9 @@ public class PortalTile extends TileEntity {
 		return super.writeToNBT(tag);
 	}
 
+	@Override
+	public String toString() {
+		return String.format("Portal Tile[Dimension:%s, Target:%s, Top:%s, Built:%s]", targetDim, target, top, builtStruct);
+	}
+
 }
