@@ -12,7 +12,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -74,16 +73,7 @@ public class DimstackMod {
 		return I18n.format(message);
 	}
 
-	static TextFormatting getTextColour(PlayerTransmit t, EntityPlayer player) {
-		if (player == null || t == null || t.from != player.dimension) { return TextFormatting.GRAY; }
-		int playerY = player.getPosition().getY();
-		if (Math.abs(playerY - t.yLimit) < config.getRedDistance()) { return TextFormatting.DARK_RED; }
-		if (Math.abs(playerY - t.yLimit) < config.getOrangeDistance()) { return TextFormatting.LIGHT_PURPLE; }
-		return TextFormatting.GRAY;
-	}
-
 	public static void sendStatusMessage(EntityPlayer player, String string) {
-		//    player.sendStatusMessage(new TextComponentTranslation(string), true);
 		player.sendMessage(new TextComponentTranslation(string));
 	}
 
@@ -92,7 +82,7 @@ public class DimstackMod {
 	 */
 	@Nullable
 	public static PlayerTransmit getTargetFor(World world, BlockPos pos) {
-		for (PlayerTransmit t : DimstackMod.config.emitters) {
+		for (PlayerTransmit t : DimstackMod.config.transmits) {
 			int playerY = pos.getY();
 			if (t.from == world.provider.getDimension()) {
 				if (t.greaterThan && playerY > t.yLimit) {

@@ -12,7 +12,6 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -52,9 +51,6 @@ public class PortalBlock extends Block {
 					} else if (t.pos != null) {
 						StackTeleporter teleporter = new StackTeleporter(targetDim, t.pos);
 						teleporter.teleportToDimension(tile, playerMP, t.to, !t.relative);
-					}
-					if (DimstackMod.config.doChatMessage()) {
-						DimstackMod.sendStatusMessage(playerMP, TextFormatting.BLACK + Integer.toHexString(t.hashCode()) + TextFormatting.WHITE + " rift activated");
 					}
 				} catch (Exception e) {
 					DimstackMod.logger.error("There has been an exception during an attempted teleportation.", e);

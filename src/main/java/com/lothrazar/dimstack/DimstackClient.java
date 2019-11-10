@@ -10,25 +10,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class DimstackClient {
 
-	/*
-	@SubscribeEvent
-	public void onItemTooltipEvent(ItemTooltipEvent event) {
-		if (DimstackMod.config.doTooltips()) for (PlayerTransmit t : DimstackMod.config.emitters) {
-			if (t.keyCached != null && t.keyCached == event.getItemStack().getItem() && t.keyMeta == event.getItemStack().getMetadata()) {
-				TextFormatting f = DimstackMod.getTextColour(t, event.getEntityPlayer());
-				event.getToolTip().add(f + DimstackMod.lang(DimstackMod.MODID + ".tooltip") + " [" + t.from + "," + t.to + "]");
-				if (event.getFlags().isAdvanced()) {
-					event.getToolTip().add(t.toString());
-				}
-			}
-		}
-	}*/
-
 	@SubscribeEvent
 	public void models(ModelRegistryEvent e) {
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(DimstackMod.PORTAL), 0, new ModelResourceLocation(DimstackMod.PORTAL.getRegistryName(), "normal"));
-		for (int i = 0; i < 20; i++)
-			ModelLoader.setCustomModelResourceLocation(DimstackMod.KEY, i, new ModelResourceLocation(DimstackMod.KEY.getRegistryName(), "inventory"));
+		for (PlayerTransmit t : DimstackMod.config.transmits)
+			ModelLoader.setCustomModelResourceLocation(DimstackMod.KEY, t.keyMeta, new ModelResourceLocation(DimstackMod.KEY.getRegistryName(), "inventory"));
 	}
 
 	@SubscribeEvent
@@ -39,6 +25,15 @@ public class DimstackClient {
 			}
 			return -1;
 		}, DimstackMod.KEY);
+
+		e.getItemColors().registerItemColorHandler((stack, tint) -> {
+			int dim = Minecraft.getMinecraft().world.provider.getDimension();
+			if (DimstackMod.config.dimPortalColors.containsKey(dim)) {
+				int[] colors = DimstackMod.config.dimPortalColors.get(dim);
+				return colors[Minecraft.getMinecraft().player.posY < 50 ? 0 : 1];
+			}
+			return -1;
+		}, DimstackMod.PORTAL);
 	}
 
 	@SubscribeEvent

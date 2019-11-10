@@ -1,6 +1,8 @@
 package com.lothrazar.dimstack;
 
 import java.util.List;
+
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +24,7 @@ public class KeyItem extends Item {
 		this.setHasSubtypes(true);
 		this.setTranslationKey(DimstackMod.MODID + ".key");
 		this.setCreativeTab(CreativeTabs.MISC);
+		this.setMaxStackSize(1);
 	}
 
 	@Override
@@ -41,25 +44,18 @@ public class KeyItem extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flagIn) {
-		for (PlayerTransmit t : DimstackMod.config.emitters) {
+		for (PlayerTransmit t : DimstackMod.config.transmits) {
 			if (t.keyMeta == stack.getMetadata()) {
-        DimensionType from = DimensionType.getById(t.from);
-        DimensionType to = DimensionType.getById(t.to);
-        String fromstr = t.from + "";
-        String tostr = t.to + "";
-        if (from != null) {
-          fromstr = from.getName();
-        }
-        if (to != null) {
-          tostr = to.getName();
-        }
-			  tooltip.add(DimstackMod.lang(DimstackMod.MODID + ".tooltip") + " [" + fromstr+"/"+tostr+ "]");}
+				String from = I18n.format("dimstack." + DimensionType.getById(t.from).getName() + ".name");
+				String to = I18n.format("dimstack." + DimensionType.getById(t.to).getName() + ".name");
+				tooltip.add(I18n.format(DimstackMod.MODID + ".tooltip", from, to));
+			}
 		}
 	}
 
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-		if (this.isInCreativeTab(tab)) for (PlayerTransmit t : DimstackMod.config.emitters) {
+		if (this.isInCreativeTab(tab)) for (PlayerTransmit t : DimstackMod.config.transmits) {
 			items.add(new ItemStack(this, 1, t.keyMeta));
 		}
 	}

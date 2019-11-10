@@ -16,23 +16,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Config(modid = DimstackMod.MODID, category = DimstackMod.MODID + ".settings")
 public class DimConfig {
 
-	public List<PlayerTransmit> emitters = new ArrayList<>();
+	public List<PlayerTransmit> transmits = new ArrayList<>();
 	public Int2IntMap dimKeyColors = new Int2IntOpenHashMap();
 	public Int2ObjectMap<int[]> dimPortalColors = new Int2ObjectOpenHashMap<>();
 	private Configuration config;
 	private String[] layers;
 	private String[] layersRelative;
 	private boolean tooltips;
-	private boolean chatmessage;
-	private int orangedistance;
-	private int reddistance;
 
 	public boolean doTooltips() {
 		return tooltips;
-	}
-
-	public boolean doChatMessage() {
-		return chatmessage;
 	}
 
 	public DimConfig(Configuration configuration) {
@@ -50,9 +43,6 @@ public class DimConfig {
 	private void syncConfig() {
 		String cat = DimstackMod.MODID + ".extras";
 		this.tooltips = config.getBoolean("ShowTooltips", cat, true, "Show tooltips on dimensional keys");
-		this.chatmessage = config.getBoolean("ShowChatOnTeleport", cat, true, "Show chat message on rift use");
-		this.reddistance = config.getInt("TooltipCloseDistance", cat, 8, 1, 128, "How far away from the rift will your keystone item tooltip change colour for being very close");
-		this.orangedistance = config.getInt("TooltipFurtherDistance", cat, 16, 1, 128, "How far away from the rift will your keystone item tooltip change colour for being kinda close");
 		cat = DimstackMod.MODID + ".layers";
 		config.addCustomCategoryComment(cat, "Each row is one teleportation rift betewen dimensions" + "\r\nto: start dimension where item and tests are ran" + "\r\nfrom: destination" + "\r\ncompare:  < means player.y < yLimit  " + "\r\nkey: what you must hold.  Empty for no item check");
 		this.layers = config.getStringList("TargetedTransitions", cat, new String[] { "0,1,>,200,3,0,20,0" }, "Simple layer transitions that target an exact location in the destination dimension.  [from,to,compare,ylimit,key meta,positionxyz]  ");
@@ -99,12 +89,12 @@ public class DimConfig {
 	}
 
 	private void parseEmitters() {
-		this.emitters = new ArrayList<>();
+		this.transmits = new ArrayList<>();
 		for (String layer : this.layers) {
-			this.emitters.add(this.parseLayer(layer, true));
+			this.transmits.add(this.parseLayer(layer, true));
 		}
 		for (String layer : this.layersRelative) {
-			this.emitters.add(this.parseLayer(layer, false));
+			this.transmits.add(this.parseLayer(layer, false));
 		}
 
 	}
@@ -132,11 +122,4 @@ public class DimConfig {
 		return t;
 	}
 
-	public int getRedDistance() {
-		return this.reddistance;
-	}
-
-	public int getOrangeDistance() {
-		return this.orangedistance;
-	}
 }
