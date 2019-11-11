@@ -1,12 +1,11 @@
 package com.lothrazar.dimstack;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.lothrazar.dimstack.transit.TransitManager;
+
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -15,13 +14,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Config(modid = DimstackMod.MODID, category = DimstackMod.MODID + ".settings")
 public class DimConfig {
 
-	public List<PlayerTransmit> transmits = new ArrayList<>();
 	public Int2IntMap dimKeyColors = new Int2IntOpenHashMap();
 	public Int2ObjectMap<int[]> dimPortalColors = new Int2ObjectOpenHashMap<>();
 	private Configuration config;
-	private String[] layers;
-	private String[] layersRelative;
-	 
+	private String[] absoluteTransits;
+	private String[] relativeTransits;
+
 	public DimConfig(Configuration configuration) {
 		this.config = configuration;
 		syncConfig();
@@ -35,11 +33,11 @@ public class DimConfig {
 	}
 
 	private void syncConfig() {
-		String  cat = DimstackMod.MODID + ".layers";
+		String cat = DimstackMod.MODID + ".layers";
 		config.addCustomCategoryComment(cat, "Each row is one teleportation rift betewen dimensions" + "\r\nto: start dimension where item and tests are ran" + "\r\nfrom: destination" + "\r\ncompare:  < means player.y < yLimit  " + "\r\nkey: what you must hold.  Empty for no item check");
-		this.layers = config.getStringList("TargetedTransitions", cat, new String[] { "0,1,>,200,3,0,20,0" }, "Simple layer transitions that target an exact location in the destination dimension.  [from,to,compare,ylimit,key meta,positionxyz]  ");
+		this.absoluteTransits = config.getStringList("TargetedTransitions", cat, new String[] { "0,1,>,200,3,0,20,0" }, "Simple layer transitions that target an exact location in the destination dimension.  [from,to,compare,ylimit,key meta,positionxyz]  ");
 
-		this.layersRelative = config.getStringList("RelativeTransitions", cat, new String[] {
+		this.relativeTransits = config.getStringList("RelativeTransitions", cat, new String[] {
 				//from overworld down to nether
 				"0,-1,<,3,0,0.125,120",
 				//from nether up to overworld
@@ -52,7 +50,7 @@ public class DimConfig {
 		for (String s : keyColors) {
 			String[] split = s.split(":");
 			if (split.length != 2) {
-				DimstackMod.logger.error("Invalid key color entry {} will be ignored", s);
+				DimstackMod.LOGGER.error("Invalid key color entry {} will be ignored", s);
 				continue;
 			}
 			int meta = Integer.parseInt(split[0]);
@@ -65,7 +63,7 @@ public class DimConfig {
 		for (String s : dimColors) {
 			String[] split = s.split(":");
 			if (split.length != 3) {
-				DimstackMod.logger.error("Invalid portal color entry {} will be ignored", s);
+				DimstackMod.LOGGER.error("Invalid portal color entry {} will be ignored", s);
 				continue;
 			}
 
@@ -77,41 +75,15 @@ public class DimConfig {
 		}
 
 		config.save();
-		this.parseEmitters();
+		TransitManager.reload(this);
 	}
 
-	private void parseEmitters() {
-		this.transmits = new ArrayList<>();
-		for (String layer : this.layers) {
-			this.transmits.add(this.parseLayer(layer, true));
-		}
-		for (String layer : this.layersRelative) {
-			this.transmits.add(this.parseLayer(layer, false));
-		}
-
+	public String[] getRelativeTransits() {
+		return relativeTransits;
 	}
 
-	private PlayerTransmit parseLayer(String layer, boolean useBlockPos) {
-		DimstackMod.logger.info("config parsing :" + layer);
-		String[] lrs = layer.split(",");
-		PlayerTransmit t = new PlayerTransmit();
-		t.from = Integer.parseInt(lrs[0]);
-		t.to = Integer.parseInt(lrs[1]);
-		t.greaterThan = ">".equalsIgnoreCase(lrs[2]);
-		t.yLimit = Integer.parseInt(lrs[3]);
-		t.keyMeta = Integer.parseInt(lrs[4]);
-		if (useBlockPos) {
-			int x = Integer.parseInt(lrs[5]), y = Integer.parseInt(lrs[6]), z = Integer.parseInt(lrs[7]);
-			t.pos = new BlockPos(x, y, z);
-			t.relative = false;
-			t.ratio = 1;//ignored in this case
-		} else {
-			t.relative = true;
-			t.ratio = Float.parseFloat(lrs[5]);
-			int y = Integer.parseInt(lrs[6]);
-			t.pos = new BlockPos(0, y, 0);//0's set by relative to player
-		}
-		return t;
+	public String[] getAbsoluteTransits() {
+		return absoluteTransits;
 	}
 
 }

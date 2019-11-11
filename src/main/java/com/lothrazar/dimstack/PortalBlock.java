@@ -1,5 +1,9 @@
 package com.lothrazar.dimstack;
 
+import com.lothrazar.dimstack.transit.ActiveTransit;
+import com.lothrazar.dimstack.transit.Transit;
+import com.lothrazar.dimstack.transit.TransitManager;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -36,45 +40,18 @@ public class PortalBlock extends Block {
 		if (entity instanceof EntityPlayerMP && !entity.isDead) {
 			if (!world.isRemote && !entity.isRiding() && !entity.isBeingRidden() && entity.isNonBoss()) {
 				EntityPlayerMP playerMP = (EntityPlayerMP) entity;
+				if (playerMP.getCooldownTracker().hasCooldown(DimstackMod.PORTAL_I)) return;
 				PortalTile tile = (PortalTile) world.getTileEntity(pos);
-				PlayerTransmit t = DimstackMod.getTargetFor(tile);
+				Transit t = TransitManager.getTargetFor(tile);
 				if (t == null || tile == null) return;
-				WorldServer targetDim = playerMP.getServer().getWorld(t.to);
+				WorldServer targetDim = playerMP.getServer().getWorld(t.getTargetDim());
 				try {
-					if (t.relative) {
-						BlockPos target = pos;
-						float x = target.getX() * t.ratio;
-						float z = target.getX() * t.ratio;
-						target = new BlockPos((int) x, t.pos.getY(), (int) z);
-						StackTeleporter teleporter = new StackTeleporter(targetDim, target);
-						teleporter.teleportToDimension(tile, playerMP, t.to, !t.relative);
-					} else if (t.pos != null) {
-						StackTeleporter teleporter = new StackTeleporter(targetDim, t.pos);
-						teleporter.teleportToDimension(tile, playerMP, t.to, !t.relative);
-					}
+					ActiveTransit teleporter = new ActiveTransit(targetDim, tile, t);
+					teleporter.teleport(playerMP);
+					playerMP.getCooldownTracker().setCooldown(DimstackMod.PORTAL_I, 20);
 				} catch (Exception e) {
-					DimstackMod.logger.error("There has been an exception during an attempted teleportation.", e);
+					DimstackMod.LOGGER.error("There has been an exception during an attempted teleportation.", e);
 				}
-			}
-		}
-	}
-
-	public static void setDestination(World world, BlockPos pos, PlayerTransmit t) {
-		if (t.relative) {
-			BlockPos target = pos;
-			float x = target.getX() * t.ratio;
-			float z = target.getX() * t.ratio;
-			target = new BlockPos((int) x, t.pos.getY(), (int) z);
-			PortalTile tile = (PortalTile) world.getTileEntity(pos);
-			if (tile != null) {
-				tile.target = target;
-				tile.targetDim = t.to;
-			}
-		} else if (t.pos != null) {
-			PortalTile tile = (PortalTile) world.getTileEntity(pos);
-			if (tile != null) {
-				tile.target = t.pos;
-				tile.targetDim = t.to;
 			}
 		}
 	}
@@ -106,6 +83,16 @@ public class PortalBlock extends Block {
 
 	@Override
 	public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
+	}
+
+	@Override
+	public int getLightOpacity(IBlockState state) {
+		return 0;
+	}
+
+	@Override
+	public int getLightValue(IBlockState state) {
+		return 15;
 	}
 
 }

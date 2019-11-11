@@ -2,6 +2,10 @@ package com.lothrazar.dimstack;
 
 import java.util.List;
 
+import com.lothrazar.dimstack.transit.Transit;
+import com.lothrazar.dimstack.transit.TransitManager;
+import com.lothrazar.dimstack.transit.TransitUtil;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -30,13 +34,14 @@ public class KeyItem extends Item {
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (world.isRemote) return EnumActionResult.SUCCESS;
-		PlayerTransmit t = DimstackMod.getTargetFor(world, pos);
-		if (t != null && t.keyMeta == player.getHeldItem(hand).getMetadata()) {
+		Transit t = TransitManager.getTargetFor(world, pos);
+		if (t != null && t.getKeyMeta() == player.getHeldItem(hand).getMetadata()) {
 			world.setBlockState(pos, DimstackMod.PORTAL.getDefaultState());
 			PortalTile tile = (PortalTile) world.getTileEntity(pos);
-			tile.top = t.greaterThan;
+			tile.setGoesUpwards(t.goesUpwards());
 			player.getCooldownTracker().setCooldown(this, 300);
 			player.getHeldItem(hand).shrink(1);
+			TransitUtil.buildStructure(tile);
 			return EnumActionResult.SUCCESS;
 		}
 		return EnumActionResult.FAIL;
@@ -45,10 +50,10 @@ public class KeyItem extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flagIn) {
-		for (PlayerTransmit t : DimstackMod.config.transmits) {
-			if (t.keyMeta == stack.getMetadata()) {
-				String from = I18n.format("dimstack." + DimensionType.getById(t.from).getName() + ".name");
-				String to = I18n.format("dimstack." + DimensionType.getById(t.to).getName() + ".name");
+		for (Transit t : TransitManager.getAllTransits()) {
+			if (t.getKeyMeta() == stack.getMetadata()) {
+				String from = I18n.format("dimstack." + DimensionType.getById(t.getSourceDim()).getName() + ".name");
+				String to = I18n.format("dimstack." + DimensionType.getById(t.getTargetDim()).getName() + ".name");
 				tooltip.add(I18n.format(DimstackMod.MODID + ".tooltip", from, to));
 			}
 		}
@@ -56,8 +61,8 @@ public class KeyItem extends Item {
 
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-		if (this.isInCreativeTab(tab)) for (PlayerTransmit t : DimstackMod.config.transmits) {
-			items.add(new ItemStack(this, 1, t.keyMeta));
+		if (this.isInCreativeTab(tab)) for (Transit t : TransitManager.getAllTransits()) {
+			items.add(new ItemStack(this, 1, t.getKeyMeta()));
 		}
 	}
 

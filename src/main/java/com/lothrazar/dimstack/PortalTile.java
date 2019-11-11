@@ -8,21 +8,45 @@ public class PortalTile extends TileEntity {
 
 	public static final BlockPos UNLINKED = new BlockPos(-1, -1, -1);
 
-	public BlockPos target = UNLINKED;
-	public int targetDim = 0;
-	public boolean top = false;
-	public boolean builtStruct = false;
+	private BlockPos target = UNLINKED;
+	private int targetDim = 0;
+	private boolean goesUp = false;
 
 	public PortalTile() {
+	}
 
+	public BlockPos getTarget() {
+		return target;
+	}
+
+	public int getTargetDim() {
+		return targetDim;
+	}
+
+	public boolean goesUpwards() {
+		return goesUp;
+	}
+
+	public void setTarget(BlockPos pos) {
+		this.target = pos;
+		markDirty();
+	}
+
+	public void setTargetDim(int dim) {
+		this.targetDim = dim;
+		markDirty();
+	}
+
+	public void setGoesUpwards(boolean top) {
+		this.goesUp = top;
+		markDirty();
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		target = BlockPos.fromLong(tag.getLong("target"));
 		targetDim = tag.getInteger("targetdim");
-		top = tag.getBoolean("top");
-		builtStruct = tag.getBoolean("struct");
+		goesUp = tag.getBoolean("up");
 		super.readFromNBT(tag);
 	}
 
@@ -30,14 +54,8 @@ public class PortalTile extends TileEntity {
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		tag.setLong("target", target.toLong());
 		tag.setInteger("targetdim", targetDim);
-		tag.setBoolean("top", top);
-		tag.setBoolean("struct", builtStruct);
+		tag.setBoolean("up", goesUp);
 		return super.writeToNBT(tag);
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Portal Tile[Dimension:%s, Target:%s, Top:%s, Built:%s]", targetDim, target, top, builtStruct);
 	}
 
 }
