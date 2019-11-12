@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "${mc_version}-${mod_version}"
 group= "com.lothrazar.dimstack"
-archivesBaseName = "dimstack"
+archivesBaseName = "DimStack"
 
 sourceCompatibility = targetCompatibility = '1.8'
 compileJava {
