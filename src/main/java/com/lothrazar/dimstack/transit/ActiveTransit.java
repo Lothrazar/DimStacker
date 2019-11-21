@@ -70,10 +70,10 @@ public class ActiveTransit implements ITeleporter {
 			player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 200, 200, false, false));
 		}
 		if (this.world != null && this.world.getMinecraftServer() != null) {
-			player.changeDimension(source.getTargetDim(), this);
+			player.changeDimension(transit.getTargetDim(), this);
 			this.world.playSound(null, target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.MASTER, 0.25F, this.world.rand.nextFloat() * 0.4F + 0.8F);
 		} else {
-			throw new IllegalArgumentException("Dimension: " + source.getTargetDim() + " doesn't exist.");
+			throw new IllegalArgumentException("Dimension: " + transit.getTargetDim() + " doesn't exist.");
 		}
 	}
 
@@ -124,9 +124,7 @@ public class ActiveTransit implements ITeleporter {
 			PortalTile tile = (PortalTile) world.getTileEntity(destination);
 			tile.setGoesUpwards(!source.goesUpwards());
 			tile.setTarget(source.getPos());
-			tile.setTargetDim(source.getWorld().provider.getDimension());
 			source.setTarget(tile.getPos());
-			source.setTargetDim(tile.getWorld().provider.getDimension());
 			TransitUtil.buildStructure(tile);
 		}
 

@@ -9,7 +9,6 @@ public class PortalTile extends TileEntity {
 	public static final BlockPos UNLINKED = new BlockPos(-1, -1, -1);
 
 	private BlockPos target = UNLINKED;
-	private int targetDim = 0;
 	private boolean goesUp = false;
 
 	public PortalTile() {
@@ -17,10 +16,6 @@ public class PortalTile extends TileEntity {
 
 	public BlockPos getTarget() {
 		return target;
-	}
-
-	public int getTargetDim() {
-		return targetDim;
 	}
 
 	public boolean goesUpwards() {
@@ -32,11 +27,6 @@ public class PortalTile extends TileEntity {
 		markDirty();
 	}
 
-	public void setTargetDim(int dim) {
-		this.targetDim = dim;
-		markDirty();
-	}
-
 	public void setGoesUpwards(boolean top) {
 		this.goesUp = top;
 		markDirty();
@@ -45,7 +35,6 @@ public class PortalTile extends TileEntity {
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		target = BlockPos.fromLong(tag.getLong("target"));
-		targetDim = tag.getInteger("targetdim");
 		goesUp = tag.getBoolean("up");
 		super.readFromNBT(tag);
 	}
@@ -53,7 +42,6 @@ public class PortalTile extends TileEntity {
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
 		tag.setLong("target", target.toLong());
-		tag.setInteger("targetdim", targetDim);
 		tag.setBoolean("up", goesUp);
 		return super.writeToNBT(tag);
 	}
