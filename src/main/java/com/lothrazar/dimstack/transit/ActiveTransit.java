@@ -6,10 +6,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
@@ -39,14 +42,14 @@ public class ActiveTransit implements ITeleporter {
         target = portalPos.down(3);
         teleportInternal(player);
       }
-      TextComponentTranslation to = new TextComponentTranslation("dimstack." + DimensionType.getById(transit.getTargetDim()).getName() + ".name");
-      player.sendMessage(new TextComponentTranslation("dimstack.teleport.info", to));
+      TranslationTextComponent to = new TranslationTextComponent("dimstack." + DimensionType.getById(transit.getTargetDim()).getRegistryName() + ".name");
+      player.sendMessage(new TranslationTextComponent("dimstack.teleport.info", to));
     }
     else {
       portalPos = transit.getTargetPos();
       for (int x = -1; x <= 1; x++) {
         for (int z = -1; z <= 1; z++) {
-          world.setBlockState(portalPos.add(x, 0, z), Blocks.STONEBRICK.getDefaultState(), 2);
+          world.setBlockState(portalPos.add(x, 0, z), Blocks.STONE_BRICKS.getDefaultState(), 2);
         }
       }
       for (int x = -1; x <= 1; x++) {
@@ -55,19 +58,21 @@ public class ActiveTransit implements ITeleporter {
             world.setBlockState(portalPos.add(x, y, z), Blocks.AIR.getDefaultState(), 2);
         }
       }
-      TextComponentTranslation to = new TextComponentTranslation("dimstack." + DimensionType.getById(transit.getTargetDim()).getName() + ".name");
-      player.sendMessage(new TextComponentTranslation("dimstack.teleport.info", to));
+      TranslationTextComponent to = new TranslationTextComponent("dimstack." + DimensionType.getById(transit.getTargetDim()).getRegistryName() + ".name");
+      player.sendMessage(new TranslationTextComponent("dimstack.teleport.info", to));
       target = portalPos.up();
       teleportInternal(player);
     }
   }
 
   private void teleportInternal(PlayerEntity player) {
-    if (!player.capabilities.isCreativeMode) {
-      player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 200, 200, false, false));
+    if (!player.isCreative()) {
+      player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 200, 200, false, false));
     }
-    if (this.world != null && this.world.getMinecraftServer() != null) {
-      player.changeDimension(transit.getTargetDim(), this);
+    if (this.world != null && this.world.getServer() != null) {
+      //needs to use DimensionType now
+      DimensionType dim = DimensionType.getById(transit.getTargetDim());
+      player.changeDimension(dim, this);
       this.world.playSound(null, target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.MASTER, 0.25F,
           this.world.rand.nextFloat() * 0.4F + 0.8F);
     }
