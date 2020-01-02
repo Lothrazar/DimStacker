@@ -28,6 +28,8 @@ public class DimstackMod {
   public static final Item PORTAL_I = null;
   @ObjectHolder("dimstack:key")
   public static final KeyItem KEY = null;
+  @ObjectHolder("dimstack:portal")
+  public static TileEntityType<PortalTile> portalTile;
 
   public DimstackMod() {
     // Register the setup method for modloading
