@@ -60,7 +60,7 @@ public class DimstackMod {
     @SubscribeEvent
     public static void onItemsRegistry(RegistryEvent.Register<Item> e) {
       Item.Properties properties = new Item.Properties().group(ItemGroup.MISC);// tab group
-      e.getRegistry().register(new KeyItem().setRegistryName("key"));
+      e.getRegistry().register(new KeyItem(properties).setRegistryName("key"));
       e.getRegistry().register(new BlockItem(PORTAL, properties).setRegistryName(PORTAL.getRegistryName()));
     }
 
