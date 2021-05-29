@@ -1,9 +1,9 @@
 package com.lothrazar.dimstack;
 
-import java.util.List;
 import com.lothrazar.dimstack.transit.Transit;
 import com.lothrazar.dimstack.transit.TransitManager;
 import com.lothrazar.dimstack.transit.TransitUtil;
+import java.util.List;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,8 +14,8 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -34,7 +34,7 @@ public class KeyItem extends Item {
     BlockPos pos = context.getPos();
     Hand hand = context.getHand();
     Transit t = TransitManager.getTargetFor(world, pos);
-    if (t != null && t.getKeyMeta() == player.getHeldItem(hand).getMetadata()) {
+    if (t != null && t.getKeyMeta() == player.getHeldItem(hand).getOrCreateTag().getInt("keymeta")) {
       world.setBlockState(pos, DimstackMod.PORTAL.getDefaultState());
       PortalTile tile = (PortalTile) world.getTileEntity(pos);
       tile.setGoesUpwards(t.goesUpwards());
@@ -50,10 +50,10 @@ public class KeyItem extends Item {
   @OnlyIn(Dist.CLIENT)
   public void addInformation(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
     for (Transit t : TransitManager.getAllTransits()) {
-      if (t.getKeyMeta() == stack.getMetadata()) {
-        String from = I18n.format("dimstack." + DimensionType.getById(t.getSourceDim()).getRegistryName() + ".name");
-        String to = I18n.format("dimstack." + DimensionType.getById(t.getTargetDim()).getRegistryName() + ".name");
-        tooltip.add(I18n.format(DimstackMod.MODID + ".tooltip", from, to));
+      if (t.getKeyMeta() == stack.getOrCreateTag().getInt("keymeta")) {
+        String from = I18n.format("dimstack." + t.getSourceDim().getPath() + ".name");
+        String to = I18n.format("dimstack." + t.getTargetDim().getPath() + ".name");
+        tooltip.add(new TranslationTextComponent(DimstackMod.MODID + ".tooltip", from, to));
       }
     }
   }

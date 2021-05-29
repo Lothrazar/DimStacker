@@ -1,5 +1,6 @@
 package com.lothrazar.dimstack;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -33,10 +34,10 @@ public class PortalTile extends TileEntity {
   }
 
   @Override
-  public void read(CompoundNBT tag) {
+  public void read(BlockState bs, CompoundNBT tag) {
     target = BlockPos.fromLong(tag.getLong("target"));
     goesUp = tag.getBoolean("up");
-    super.read(tag);
+    super.read(bs, tag);
   }
 
   @Override

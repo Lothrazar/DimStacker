@@ -9,13 +9,11 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 
 public class PortalBlock extends Block {
@@ -46,7 +44,7 @@ public class PortalBlock extends Block {
         Transit t = TransitManager.getTargetFor(tile);
         if (t == null || tile == null) return;
         //        playerMP.getServer().getw
-        ServerWorld targetDim = playerMP.getServer().getWorld(DimensionType.getById(t.getTargetDim()));
+        ServerWorld targetDim = playerMP.getServer().getWorld(UtilWorld.stringToDimension(t.getTargetDim()));
         try {
           ActiveTransit teleporter = new ActiveTransit(targetDim, tile, t);
           teleporter.teleport(playerMP);
@@ -70,27 +68,17 @@ public class PortalBlock extends Block {
   }
 
   @Override
-  public BlockRenderLayer getRenderLayer() {
-    return BlockRenderLayer.TRANSLUCENT;
-  }
-  //  @Override
-  //  public boolean isOpaqueCube(BlockState state) {
-  //    return false;
-  //  }
-  //  @Override
-  //  public boolean isFullCube(BlockState state) {
-  //    return false;
-  //  }
-  //  @Override
-  //  public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {}
-
-  @Override
   public int getOpacity(BlockState state, IBlockReader worldIn, BlockPos pos) {
     return 0;
   }
-
-  @Override
-  public int getLightValue(BlockState state) {
-    return 15;
-  }
+  //registry like cyclic IF needed
+  //  @Override
+  //  public BlockRenderLayer getRenderLayer() {
+  //    return BlockRenderLayer.TRANSLUCENT;
+  //  }
+  // TODO: steal from ABD magma etc
+  //  @Override
+  //  public int getLightValue(BlockState state) {
+  //    return 15;
+  //  }
 }

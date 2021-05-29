@@ -1,7 +1,5 @@
 package com.lothrazar.dimstack;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -11,10 +9,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(DimstackMod.MODID)
 public class DimstackMod {
@@ -32,19 +33,17 @@ public class DimstackMod {
   public static TileEntityType<PortalTile> portalTile;
 
   public DimstackMod() {
-    // Register the setup method for modloading
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
     //only for server starting
     MinecraftForge.EVENT_BUS.register(this);
     //	    config = new ConfigManager(FMLPaths.CONFIGDIR.get().resolve(MODID + ".toml"));
   }
 
-  //	@EventHandler
-  //	public void preInit(FMLPreInitializationEvent e) {
-  //		config = new DimConfig(new Configuration(e.getSuggestedConfigurationFile()));
-  //		MinecraftForge.EVENT_BUS.register(this);
-  //		GameRegistry.registerTileEntity(PortalTile.class, new ResourceLocation(MODID, "portal"));
-  //	}
+  private void setupClient(final FMLClientSetupEvent event) {
+    DimstackClient.setup();
+  }
+
   private void setup(final FMLCommonSetupEvent event) {
     //now all blocks/items exist
   }

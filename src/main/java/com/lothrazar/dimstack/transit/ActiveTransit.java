@@ -2,6 +2,8 @@ package com.lothrazar.dimstack.transit;
 
 import com.lothrazar.dimstack.DimstackMod;
 import com.lothrazar.dimstack.PortalTile;
+import com.lothrazar.dimstack.UtilWorld;
+import java.util.function.Function;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -11,11 +13,9 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.ITeleporter;
 
 public class ActiveTransit implements ITeleporter {
 
@@ -42,8 +42,8 @@ public class ActiveTransit implements ITeleporter {
         target = portalPos.down(3);
         teleportInternal(player);
       }
-      TranslationTextComponent to = new TranslationTextComponent("dimstack." + DimensionType.getById(transit.getTargetDim()).getRegistryName() + ".name");
-      player.sendMessage(new TranslationTextComponent("dimstack.teleport.info", to));
+      TranslationTextComponent to = new TranslationTextComponent("dimstack." + transit.getTargetDim().getPath() + ".name");
+      player.sendMessage(new TranslationTextComponent("dimstack.teleport.info", to), player.getUniqueID());
     }
     else {
       portalPos = transit.getTargetPos();
@@ -58,8 +58,8 @@ public class ActiveTransit implements ITeleporter {
             world.setBlockState(portalPos.add(x, y, z), Blocks.AIR.getDefaultState(), 2);
         }
       }
-      TranslationTextComponent to = new TranslationTextComponent("dimstack." + DimensionType.getById(transit.getTargetDim()).getRegistryName() + ".name");
-      player.sendMessage(new TranslationTextComponent("dimstack.teleport.info", to));
+      TranslationTextComponent to = new TranslationTextComponent("dimstack." + transit.getTargetDim().getPath() + ".name");
+      player.sendMessage(new TranslationTextComponent("dimstack.teleport.info", to), player.getUniqueID());
       target = portalPos.up();
       teleportInternal(player);
     }
@@ -71,8 +71,10 @@ public class ActiveTransit implements ITeleporter {
     }
     if (this.world != null && this.world.getServer() != null) {
       //needs to use DimensionType now
-      DimensionType dim = DimensionType.getById(transit.getTargetDim());
-      player.changeDimension(dim, this);
+      ServerWorld dim = world.getServer().getWorld(UtilWorld.stringToDimension(transit.getTargetDim()));
+      //      DimensionType dim = DimensionType.getById(transit.getTargetDim());
+      //      player.changeDimension(server, teleporter)
+      player.changeDimension(dim, this);// need ServerWorld, not dim
       this.world.playSound(null, target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.MASTER, 0.25F,
           this.world.rand.nextFloat() * 0.4F + 0.8F);
     }
@@ -82,8 +84,10 @@ public class ActiveTransit implements ITeleporter {
   }
 
   @Override
-  public void placeEntity(World world, Entity entity, float yaw) {
-    entity.moveToBlockPosAndAngles(target, yaw, entity.rotationPitch);
+  public Entity placeEntity(Entity newEntity, ServerWorld currentWorld, ServerWorld destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
+    newEntity.fallDistance = 0;
+    newEntity.moveToBlockPosAndAngles(target, yaw, newEntity.rotationPitch);
+    return repositionEntity.apply(false); //Must be false or we fall on vanilla. thanks /Mrbysco/TelePastries/
   }
 
   /**
@@ -96,10 +100,11 @@ public class ActiveTransit implements ITeleporter {
       int x = (int) (src.getX() * transit.getRatio());
       int y = transit.getLanding();
       int z = (int) (src.getZ() * transit.getRatio());
-      MutableBlockPos dest = new MutableBlockPos(x, y, z);
+      BlockPos dest = new BlockPos(x, y, z);
       if (source.goesUpwards()) { //We just went up, so search upwards.
         while (true) {
-          if (y >= 255 || world.getBlockState(dest.setPos(x, y + 1, z)).getBlock() != Blocks.BEDROCK) {
+          dest = dest.up(); // dest.setPos(x, y + 1, z)
+          if (y >= 255 || world.getBlockState(dest).getBlock() != Blocks.BEDROCK) {
             break;
           }
           y++;
@@ -111,7 +116,9 @@ public class ActiveTransit implements ITeleporter {
           if (y <= 0 || state.getBlock() != Blocks.AIR && state.getBlock() != Blocks.BEDROCK) {
             break;
           }
-          state = world.getBlockState(dest.setPos(x, --y, z));
+          dest = dest.down(); // dest.setPos(x, --y, z)
+          state = world.getBlockState(dest);
+          y--;
         }
       }
       destination = dest.toImmutable();

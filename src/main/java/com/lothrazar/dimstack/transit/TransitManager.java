@@ -1,12 +1,13 @@
 package com.lothrazar.dimstack.transit;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Nullable;
 import com.lothrazar.dimstack.DimConfig;
 import com.lothrazar.dimstack.DimstackMod;
 import com.lothrazar.dimstack.PortalTile;
+import com.lothrazar.dimstack.UtilWorld;
 import com.lothrazar.dimstack.transit.Transit.TransitParseException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -21,12 +22,15 @@ public class TransitManager {
   public static Transit getTargetFor(World world, BlockPos pos) {
     for (Transit t : TRANSITS) {
       int playerY = pos.getY();
-      int id = world.getDimension().getType().getId();
-      if (t.getSourceDim() == id) {
+      String id = UtilWorld.dimensionToString(world);
+      //      int id = world.getDimension().getType().getId();
+      if (t.getSourceDim().toString().equalsIgnoreCase(id)) {
         if (t.goesUpwards() && playerY > t.yLimit) {
           return t;
         }
-        else if (!t.goesUpwards() && playerY <= t.yLimit) return t;
+        else if (!t.goesUpwards() && playerY <= t.yLimit) {
+          return t;
+        }
       }
     }
     return null;
@@ -38,9 +42,11 @@ public class TransitManager {
   @Nullable
   public static Transit getTargetFor(PortalTile tile) {
     for (Transit t : TRANSITS) {
-      int id = tile.getWorld().getDimension().getType().getId();
-      if (t.getSourceDim() == id) {
-        if (t.goesUpwards() == tile.goesUpwards()) return t;
+      String id = UtilWorld.dimensionToString(tile.getWorld());
+      if (t.getSourceDim().toString().equalsIgnoreCase(id)) {
+        if (t.goesUpwards() == tile.goesUpwards()) {
+          return t;
+        }
       }
     }
     return null;
