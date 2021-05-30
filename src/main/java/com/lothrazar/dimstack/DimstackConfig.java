@@ -24,32 +24,32 @@ public class DimstackConfig {
     COMMON_CONFIG.setConfig(configData);
   }
 
-  public static Map<String, Integer> dimPortalColors = new HashMap<>();
-  public static Map<String, Integer> dimPortalUnderColors = new HashMap<>();
+  public static Map<String, Integer> DIMPORTALCOLORS = new HashMap<>();
+  public static Map<String, Integer> DIMPORTALUNDERCOLORS = new HashMap<>();
   //  public Int2IntMap dimKeyColors = new Int2IntOpenHashMap();
-  private static Map<String, Integer> dimKeyColors = new HashMap<>();
+  public static Map<String, Integer> DIMKEYCOLORS = new HashMap<>();
   //  private Configuration config;
-  private static String[] absoluteTransits;
-  private static String[] relativeTransits;
+  private static String[] ABSOLUTETRANSITS;
+  private static String[] RELATIVETRANSITS;
   static {
     buildDefaults();
     initConfig();
   }
 
   private static void buildDefaults() {
-    absoluteTransits = new String[] { "minecraft:overworld,minecraft:the_end,>,200,3,0,20,0" };
-    relativeTransits = new String[] {
+    ABSOLUTETRANSITS = new String[] { "minecraft:overworld,minecraft:the_end,>,200,3,0,20,0" };
+    RELATIVETRANSITS = new String[] {
         //from overworld down to nether 
         //from,to,<,limit,key,ratioFLT,landing
         "minecraft:overworld,minecraft:the_nether,<,3,0,0.125,120",
         //from nether up to overworld 
-        //        "minecraft:the_nether,minecraft:overworld,>,118,1,8,8",
+        "minecraft:the_nether,minecraft:overworld,>,118,1,8,8",
         //end down to overworld
         //        "minecraft:the_end,minecraft:overworld,<,3,2,1,130" 
     };
-    dimKeyColors.put("minecraft:overworld", 0xFF0000);
-    dimPortalColors.put("minecraft:overworld", 0xFF0000);
-    dimPortalUnderColors.put("minecraft:overworld", 0x0000F0);
+    DIMKEYCOLORS.put("minecraft:overworld", 0xFF0000);
+    DIMPORTALCOLORS.put("minecraft:overworld", 0xFF0000);
+    DIMPORTALUNDERCOLORS.put("minecraft:overworld", 0x0000F0);
   }
 
   private static void initConfig() {
@@ -67,10 +67,10 @@ public class DimstackConfig {
   }
 
   public static String[] getRelativeTransits() {
-    return relativeTransits;
+    return RELATIVETRANSITS;
   }
 
   public static String[] getAbsoluteTransits() {
-    return absoluteTransits;
+    return ABSOLUTETRANSITS;
   }
 }

@@ -46,7 +46,9 @@ public class PortalBlock extends Block {
         }
         PortalTile tile = (PortalTile) world.getTileEntity(pos);
         Transit t = TransitManager.getTargetFor(tile);
-        if (t == null || tile == null) return;
+        if (t == null || tile == null) {
+          return;
+        }
         //        playerMP.getServer().getw
         ServerWorld targetDim = playerMP.getServer().getWorld(UtilWorld.stringToDimension(t.getTargetDim()));
         try {

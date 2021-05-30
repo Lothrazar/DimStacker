@@ -36,11 +36,7 @@ public class ActiveTransit implements ITeleporter {
 
   @Override
   public PortalInfo getPortalInfo(Entity entity, ServerWorld destWorld, Function<ServerWorld, PortalInfo> defaultPortalInfo) {
-    PortalInfo pos;
-    //    pos = placeNearExistingCake(destWorld, entity, dimensionPosition(entity, destWorld), entity instanceof PlayerEntity);
-    //    pos = moveToSafeCoords(destWorld, entity, pos != null ? new BlockPos(pos.pos) : dimensionPosition(entity, destWorld));
-    //    pos = customCompat(destWorld, new BlockPos(pos.pos), entity);
-    //
+    //  PortalInfo pos;
     //player.setPosition(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D);
     //
     return new PortalInfo(new Vector3d(target.getX(), target.getY(), target.getZ()),
@@ -71,8 +67,9 @@ public class ActiveTransit implements ITeleporter {
       }
       for (int x = -1; x <= 1; x++) {
         for (int z = -1; z <= 1; z++) {
-          for (int y = 1; y < 4; y++)
+          for (int y = 1; y < 4; y++) {
             world.setBlockState(portalPos.add(x, y, z), Blocks.AIR.getDefaultState(), 2);
+          }
         }
       }
       TranslationTextComponent to = new TranslationTextComponent("dimstack." + transit.getTargetDim().getPath() + ".name");
@@ -91,7 +88,7 @@ public class ActiveTransit implements ITeleporter {
       ServerWorld dim = world.getServer().getWorld(UtilWorld.stringToDimension(transit.getTargetDim()));
       //      DimensionType dim = DimensionType.getById(transit.getTargetDim());
       //      player.changeDimension(server, teleporter)
-      player.changeDimension(dim, this);// need ServerWorld, not dim
+      player.changeDimension(dim, this);
       this.world.playSound(null, target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.MASTER, 0.25F,
           this.world.rand.nextFloat() * 0.4F + 0.8F);
     }

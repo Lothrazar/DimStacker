@@ -22,7 +22,6 @@ public class TransitManager {
     for (Transit t : TRANSITS) {
       int playerY = pos.getY();
       String id = UtilWorld.dimensionToString(world);
-      //      [21:03:34] [Server thread/INFO] [dimstack/]: Transit [from=minecraft:0, to=minecraft:1, goesUpwards=true, yLimit=200, pos=BlockPos{x=0, y=20, z=0}, relative=false, ratio=0.0, keyMeta=3, landing=0] t TEST minecraft:overworld
       DimstackMod.LOGGER.info(t + " t TEST " + id);
       //      int id = world.getDimension().getType().getId();
       if (t.getSourceDim().toString().equalsIgnoreCase(id)) {

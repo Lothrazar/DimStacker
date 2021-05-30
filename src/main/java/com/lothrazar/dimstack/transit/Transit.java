@@ -135,7 +135,8 @@ public class Transit {
 
   @Override
   public String toString() {
-    return "Transit [from=" + from + ", to=" + to + ", goesUpwards=" + goesUpwards + ", yLimit=" + yLimit + ", pos=" + pos + ", relative=" + relative + ", ratio=" + ratio + ", keyMeta=" + keyMeta + ", landing=" + landing + "]";
+    return "Transit [from=" + from + ", to=" + to + ", goesUpwards=" + goesUpwards + ", yLimit=" + yLimit +
+        ", pos=" + pos + ", relative=" + relative + ", ratio=" + ratio + ", keyMeta=" + keyMeta + ", landing=" + landing + "]";
   }
 
   public static class Builder {

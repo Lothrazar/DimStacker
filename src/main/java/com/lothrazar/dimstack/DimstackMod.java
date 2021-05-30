@@ -1,7 +1,6 @@
 package com.lothrazar.dimstack;
 
 import com.lothrazar.dimstack.util.DimstackRegistry;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -21,7 +20,6 @@ public class DimstackMod {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
     //only for server starting
-    MinecraftForge.EVENT_BUS.register(this);
     IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
     DimstackRegistry.BLOCKS.register(eventBus);
     DimstackRegistry.ITEMS.register(eventBus);
@@ -30,7 +28,7 @@ public class DimstackMod {
   }
 
   private void setupClient(final FMLClientSetupEvent event) {
-    //    DimstackClient.setup();
+    //    MinecraftForge.EVENT_BUS.register(DimstackClient.class);
   }
 
   private void setup(final FMLCommonSetupEvent event) {
