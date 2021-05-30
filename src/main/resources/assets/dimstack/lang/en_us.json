@@ -4,11 +4,12 @@
     "item.dimstack.overworld_key": "Overworld Rift Key",
     "item.dimstack.nether_key": "Nether Rift Key",
     "item.dimstack.end_key": "End Rift Key",
+    "item.dimstack.twilight_key": "Twilight Rift Key",
     "dimstack.the_end": "The End",
     "dimstack.erebus": "The Erebus",
     "dimstack.overworld": "The Overworld",
-    "dimstack.twilight": "Twilight",
+    "dimstack.twilightforest": "Twilight Forest",
     "dimstack.the_beneath": "The Beneath",
     "dimstack.the_nether": "The Nether",
-    "dimstack.teleport.info": "Rift Activated. Travelling to %s."
+    "dimstack.teleport.info": "Rift Activated. Travelling to %s"
 }

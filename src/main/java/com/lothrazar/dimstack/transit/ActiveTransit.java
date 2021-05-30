@@ -57,6 +57,7 @@ public class ActiveTransit implements ITeleporter {
       }
       TranslationTextComponent to = new TranslationTextComponent(DimstackMod.MODID + "." + transit.getTargetDim().getPath());
       player.sendMessage(new TranslationTextComponent("dimstack.teleport.info", to), player.getUniqueID());
+      player.sendMessage(new TranslationTextComponent(world.getProviderName()), player.getUniqueID());
     }
     else {
       portalPos = transit.getTargetPos();

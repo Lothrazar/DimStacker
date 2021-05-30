@@ -24,14 +24,20 @@ public class DimstackClient {
         if (DimstackConfig.DIMKEYCOLORS.containsKey(key.targetDimension)) {
           return DimstackConfig.DIMKEYCOLORS.get(key.targetDimension);
         }
+        else {
+          DimstackMod.LOGGER.error("key color missing : " + key.targetDimension);
+        }
       }
       return -1;
-    }, DimstackRegistry.OVERWORLD_KEY.get(), DimstackRegistry.END_KEY.get(), DimstackRegistry.NETHER_KEY.get());
+    }, DimstackRegistry.OVERWORLD_KEY.get(), DimstackRegistry.END_KEY.get(), DimstackRegistry.NETHER_KEY.get(), DimstackRegistry.TWILIGHT_KEY.get());
     e.getItemColors().register((stack, tintIndex) -> {
       if (tintIndex == 0) {
         String dim = UtilWorld.dimensionToString(Minecraft.getInstance().world);
         if (DimstackConfig.DIMPORTALCOLORS.containsKey(dim)) {
           return DimstackConfig.DIMPORTALCOLORS.get(dim);
+        }
+        else {
+          DimstackMod.LOGGER.error("Item color missing : " + dim);
         }
       }
       return -1;

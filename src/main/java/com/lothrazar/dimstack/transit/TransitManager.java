@@ -1,7 +1,6 @@
 package com.lothrazar.dimstack.transit;
 
 import com.lothrazar.dimstack.DimstackConfig;
-import com.lothrazar.dimstack.DimstackMod;
 import com.lothrazar.dimstack.block.PortalTile;
 import com.lothrazar.dimstack.item.KeyItem;
 import com.lothrazar.dimstack.util.UtilWorld;
@@ -21,11 +20,11 @@ public class TransitManager {
     for (Transit t : TRANSITS) {
       int playerY = pos.getY();
       String id = UtilWorld.dimensionToString(world);
-      DimstackMod.LOGGER.info(t + " t TEST " + id);
       //      int id = world.getDimension().getType().getId();
       //if i am in source dim for this
-      //and my target dim matches the key
-      // && t.getKeyMeta() == key.getOrCreateTag().getInt("keymeta")
+      //and my target dim matches the key 
+      //      DimstackMod.LOGGER.info("test " + key.targetDimension
+      //          + "TARGET " + t.getTargetDim().toString().equalsIgnoreCase(key.targetDimension));
       if (t.getSourceDim().toString().equalsIgnoreCase(id) &&
           t.getTargetDim().toString().equalsIgnoreCase(key.targetDimension)) {
         if (t.goesUpwards() && playerY > t.yLimit) {

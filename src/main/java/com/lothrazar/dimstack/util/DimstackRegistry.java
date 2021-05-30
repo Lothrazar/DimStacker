@@ -25,9 +25,12 @@ public class DimstackRegistry {
   //nether_key goes TO nether. config says where from and other transits. ie from overworld to nether
   //end_key goes TO end. config says all ie overworld to end.
   //each dimension gets exactly one key
+  //twilightforest:twilightforest
+  //forge tps
   public static final RegistryObject<Item> OVERWORLD_KEY = ITEMS.register("overworld_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC), "minecraft:overworld"));
   public static final RegistryObject<Item> NETHER_KEY = ITEMS.register("nether_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC), "minecraft:the_nether"));
   public static final RegistryObject<Item> END_KEY = ITEMS.register("end_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC), "minecraft:the_end"));
+  public static final RegistryObject<Item> TWILIGHT_KEY = ITEMS.register("twilight_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC), "twilightforest:twilightforest"));
   //overworld_key
   //nether_key
   //end_key

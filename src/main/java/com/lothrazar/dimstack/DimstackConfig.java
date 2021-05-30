@@ -37,22 +37,30 @@ public class DimstackConfig {
   }
 
   private static void buildDefaults() {
-    ABSOLUTETRANSITS = new String[] { "minecraft:overworld,minecraft:the_end,>,200,0,20,0" };
+    ABSOLUTETRANSITS = new String[] {
+        //from,to,<,limit,x,y,z   
+        "minecraft:overworld,minecraft:the_end,>,200,0,20,0" };
     RELATIVETRANSITS = new String[] {
+        //from,to,<,limit,ratioFLT,landing
         //from overworld down to nether 
-        //from,to,<,limit,key,ratioFLT,landing
-        "minecraft:overworld,minecraft:the_nether,<,3,0.125,120",
+        "minecraft:overworld,minecraft:the_nether,<,8,0.125,120",
         //from nether up to overworld 
         "minecraft:the_nether,minecraft:overworld,>,118,8,8",
         //end down to overworld
-        "minecraft:the_end,minecraft:overworld,<,3,1,130"
+        "minecraft:the_end,minecraft:overworld,<,3,1,130",
+        //from nether down to twilight
+        "minecraft:the_nether,twilightforest:twilightforest,<,8,1,220",
+        //from twilight up to nether 
+        "twilightforest:twilightforest,minecraft:the_nether,>,218,1,8"
     };
     DIMKEYCOLORS.put("minecraft:overworld", 0xFF0000);
     DIMKEYCOLORS.put("minecraft:the_nether", 0x00FF00);
     DIMKEYCOLORS.put("minecraft:the_end", 0x7C009C);
-    DIMPORTALCOLORS.put("minecraft:overworld", 0xFF0000);
-    DIMPORTALCOLORS.put("minecraft:the_nether", 0x00FF00);
+    DIMKEYCOLORS.put("twilightforest:twilightforest", 0x000ba5);
+    DIMPORTALCOLORS.put("minecraft:overworld", 0x00FF00);
+    DIMPORTALCOLORS.put("minecraft:the_nether", 0xFF0000);
     DIMPORTALCOLORS.put("minecraft:the_end", 0x7C009C);
+    DIMPORTALCOLORS.put("twilightforest:twilightforest", 0x000ba5);
   }
 
   private static void initConfig() {
