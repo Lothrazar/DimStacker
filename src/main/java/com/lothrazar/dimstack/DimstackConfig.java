@@ -25,7 +25,7 @@ public class DimstackConfig {
   }
 
   public static Map<String, Integer> DIMPORTALCOLORS = new HashMap<>();
-  public static Map<String, Integer> DIMPORTALUNDERCOLORS = new HashMap<>();
+  //  public static Map<String, Integer> DIMPORTALUNDERCOLORS = new HashMap<>();
   //  public Int2IntMap dimKeyColors = new Int2IntOpenHashMap();
   public static Map<String, Integer> DIMKEYCOLORS = new HashMap<>();
   //  private Configuration config;
@@ -37,19 +37,22 @@ public class DimstackConfig {
   }
 
   private static void buildDefaults() {
-    ABSOLUTETRANSITS = new String[] { "minecraft:overworld,minecraft:the_end,>,200,3,0,20,0" };
+    ABSOLUTETRANSITS = new String[] { "minecraft:overworld,minecraft:the_end,>,200,0,20,0" };
     RELATIVETRANSITS = new String[] {
         //from overworld down to nether 
         //from,to,<,limit,key,ratioFLT,landing
-        "minecraft:overworld,minecraft:the_nether,<,3,0,0.125,120",
+        "minecraft:overworld,minecraft:the_nether,<,3,0.125,120",
         //from nether up to overworld 
-        "minecraft:the_nether,minecraft:overworld,>,118,1,8,8",
+        "minecraft:the_nether,minecraft:overworld,>,118,8,8",
         //end down to overworld
-        //        "minecraft:the_end,minecraft:overworld,<,3,2,1,130" 
+        "minecraft:the_end,minecraft:overworld,<,3,1,130"
     };
     DIMKEYCOLORS.put("minecraft:overworld", 0xFF0000);
+    DIMKEYCOLORS.put("minecraft:the_nether", 0x00FF00);
+    DIMKEYCOLORS.put("minecraft:the_end", 0x7C009C);
     DIMPORTALCOLORS.put("minecraft:overworld", 0xFF0000);
-    DIMPORTALUNDERCOLORS.put("minecraft:overworld", 0x0000F0);
+    DIMPORTALCOLORS.put("minecraft:the_nether", 0x00FF00);
+    DIMPORTALCOLORS.put("minecraft:the_end", 0x7C009C);
   }
 
   private static void initConfig() {

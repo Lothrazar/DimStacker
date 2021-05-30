@@ -2,6 +2,7 @@ package com.lothrazar.dimstack.client;
 
 import com.lothrazar.dimstack.DimstackConfig;
 import com.lothrazar.dimstack.DimstackMod;
+import com.lothrazar.dimstack.item.KeyItem;
 import com.lothrazar.dimstack.util.DimstackRegistry;
 import com.lothrazar.dimstack.util.UtilWorld;
 import net.minecraft.client.Minecraft;
@@ -18,34 +19,20 @@ public class DimstackClient {
   @SubscribeEvent
   public static void colors(ColorHandlerEvent.Item e) {
     e.getItemColors().register((stack, tintIndex) -> {
-      //convert to color now 
-      if (stack.getItem() == DimstackRegistry.KEY.get()) {
-        // ok
-        if (tintIndex == 0) {
-          String dim = UtilWorld.dimensionToString(Minecraft.getInstance().world);
-          if (DimstackConfig.DIMKEYCOLORS.containsKey(dim)) {
-            return DimstackConfig.DIMKEYCOLORS.get(dim);
-          }
-          return 0xFF000000;
+      if (tintIndex == 0 && stack.getItem() instanceof KeyItem) {
+        KeyItem key = (KeyItem) stack.getItem();
+        if (DimstackConfig.DIMKEYCOLORS.containsKey(key.targetDimension)) {
+          return DimstackConfig.DIMKEYCOLORS.get(key.targetDimension);
         }
-        //layer 1 is overlay  
-        //        int c = StorageBagItem.getColour(stack);
-        return 0;
       }
       return -1;
-    }, DimstackRegistry.KEY.get());
+    }, DimstackRegistry.OVERWORLD_KEY.get(), DimstackRegistry.END_KEY.get(), DimstackRegistry.NETHER_KEY.get());
     e.getItemColors().register((stack, tintIndex) -> {
-      if (stack.getItem() == DimstackRegistry.PORTAL_I.get()) {
-        if (tintIndex == 0) {
-          String dim = UtilWorld.dimensionToString(Minecraft.getInstance().world);
-          if (DimstackConfig.DIMPORTALCOLORS.containsKey(dim)) {
-            return DimstackConfig.DIMPORTALCOLORS.get(dim);
-          }
-          return 0xFFFFFFFF;
+      if (tintIndex == 0) {
+        String dim = UtilWorld.dimensionToString(Minecraft.getInstance().world);
+        if (DimstackConfig.DIMPORTALCOLORS.containsKey(dim)) {
+          return DimstackConfig.DIMPORTALCOLORS.get(dim);
         }
-        //layer 1 is overlay  
-        //        int c = TODO get from dimension.getColour(stack);
-        return 0xFF00FF00;
       }
       return -1;
     }, DimstackRegistry.PORTAL_I.get());
@@ -55,36 +42,11 @@ public class DimstackClient {
   public static void colors(ColorHandlerEvent.Block e) {
     RenderTypeLookup.setRenderLayer(DimstackRegistry.PORTAL.get().getBlock(), RenderType.getTranslucent());
     e.getBlockColors().register((state, reader, pos, tintIndex) -> {
-      //convert to color now
-      if (state.getBlock() == DimstackRegistry.PORTAL.get()) {
-        // ok
-        if (tintIndex == 0) { //layer zero is outline, ignore this 
-          String dim = UtilWorld.dimensionToString(Minecraft.getInstance().world);
-          if (DimstackConfig.DIMPORTALCOLORS.containsKey(dim)) {
-            return DimstackConfig.DIMPORTALCOLORS.get(dim);
-          }
-          return 0xFFFFFFFF;
+      if (tintIndex == 0) {
+        String dim = UtilWorld.dimensionToString(Minecraft.getInstance().world);
+        if (DimstackConfig.DIMPORTALCOLORS.containsKey(dim)) {
+          return DimstackConfig.DIMPORTALCOLORS.get(dim);
         }
-        //layer 1 is overlay  
-        //        int c = StorageBagItem.getColour(stack);
-        return 0;
-      }
-      return -1;
-    }, DimstackRegistry.PORTAL.get());
-    e.getBlockColors().register((state, reader, pos, tintIndex) -> {
-      //convert to color now
-      if (state.getBlock() == DimstackRegistry.PORTAL.get()) {
-        // ok
-        if (tintIndex == 1) {
-          String dim = UtilWorld.dimensionToString(Minecraft.getInstance().world);
-          if (DimstackConfig.DIMPORTALUNDERCOLORS.containsKey(dim)) {
-            return DimstackConfig.DIMPORTALUNDERCOLORS.get(dim);
-          }
-          return 0xFFFFFFFF;
-        }
-        //layer 1 is overlay  
-        //        int c = StorageBagItem.getColour(stack);
-        return 0;
       }
       return -1;
     }, DimstackRegistry.PORTAL.get());

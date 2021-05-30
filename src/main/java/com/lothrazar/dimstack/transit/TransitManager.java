@@ -3,10 +3,10 @@ package com.lothrazar.dimstack.transit;
 import com.lothrazar.dimstack.DimstackConfig;
 import com.lothrazar.dimstack.DimstackMod;
 import com.lothrazar.dimstack.block.PortalTile;
+import com.lothrazar.dimstack.item.KeyItem;
 import com.lothrazar.dimstack.util.UtilWorld;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -17,14 +17,17 @@ public class TransitManager {
   /**
    * Gets the transmit handler for a given location.
    */
-  public static Transit getTargetFor(World world, BlockPos pos, ItemStack key) {
-    // && t.getKeyMeta() == key.getOrCreateTag().getInt("keymeta")
+  public static Transit getTargetFor(World world, BlockPos pos, KeyItem key) {
     for (Transit t : TRANSITS) {
       int playerY = pos.getY();
       String id = UtilWorld.dimensionToString(world);
       DimstackMod.LOGGER.info(t + " t TEST " + id);
       //      int id = world.getDimension().getType().getId();
-      if (t.getSourceDim().toString().equalsIgnoreCase(id)) {
+      //if i am in source dim for this
+      //and my target dim matches the key
+      // && t.getKeyMeta() == key.getOrCreateTag().getInt("keymeta")
+      if (t.getSourceDim().toString().equalsIgnoreCase(id) &&
+          t.getTargetDim().toString().equalsIgnoreCase(key.targetDimension)) {
         if (t.goesUpwards() && playerY > t.yLimit) {
           return t;
         }

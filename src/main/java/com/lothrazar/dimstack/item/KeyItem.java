@@ -22,8 +22,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class KeyItem extends Item {
 
-  public KeyItem(Item.Properties prop) {
+  public final String targetDimension;
+
+  public KeyItem(Item.Properties prop, String dim) {
     super(prop.maxStackSize(1));
+    targetDimension = dim;
   }
 
   @Override
@@ -35,7 +38,7 @@ public class KeyItem extends Item {
     PlayerEntity player = context.getPlayer();
     BlockPos pos = context.getPos();
     Hand hand = context.getHand();
-    Transit t = TransitManager.getTargetFor(world, pos, player.getHeldItem(hand));
+    Transit t = TransitManager.getTargetFor(world, pos, this);
     if (t != null) {
       DimstackMod.LOGGER.info("t found " + t + player.getHeldItem(hand).getTag());
       // && t.getKeyMeta() == player.getHeldItem(hand).getOrCreateTag().getInt("keymeta")

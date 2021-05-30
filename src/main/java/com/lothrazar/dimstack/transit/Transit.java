@@ -17,10 +17,9 @@ public class Transit {
   protected final BlockPos pos;
   protected final boolean relative;
   protected final float ratio;
-  protected final int keyMeta;
   protected final int landing;
 
-  public Transit(ResourceLocation from, ResourceLocation to, boolean top, int yLimit, BlockPos pos, boolean relative, float ratio, int keyMeta, int landing) {
+  public Transit(ResourceLocation from, ResourceLocation to, boolean top, int yLimit, BlockPos pos, boolean relative, float ratio, int landing) {
     this.from = from;
     this.to = to;
     this.goesUpwards = top;
@@ -28,7 +27,6 @@ public class Transit {
     this.pos = pos;
     this.relative = relative;
     this.ratio = ratio;
-    this.keyMeta = keyMeta;
     this.landing = landing;
   }
 
@@ -85,13 +83,6 @@ public class Transit {
   }
 
   /**
-   * Which metadata on the {@link DimstackMod#KEY} item is required to open this portal.
-   */
-  public int getKeyMeta() {
-    return keyMeta;
-  }
-
-  /**
    * Returns the y-level that the destination portal will spawn at, if {@link Transit#isRelative()} is true. Otherwise this is not relevant.
    */
   public int getLanding() {
@@ -110,24 +101,17 @@ public class Transit {
       builder.to(ResourceLocation.tryCreate(lrs[1]));
       builder.goesUpwards(">".equalsIgnoreCase(lrs[2]));
       builder.limit(Integer.parseInt(lrs[3]));
-      builder.key(Integer.parseInt(lrs[4]));
       if (!relative) {
-        int x = Integer.parseInt(lrs[5]), y = Integer.parseInt(lrs[6]), z = Integer.parseInt(lrs[7]);
+        int x = Integer.parseInt(lrs[4]), y = Integer.parseInt(lrs[5]), z = Integer.parseInt(lrs[6]);
         builder.pos(new BlockPos(x, y, z));
       }
       else {
-        builder.ratio(Float.parseFloat(lrs[5]));
-        builder.landing(Integer.parseInt(lrs[6]));
+        builder.ratio(Float.parseFloat(lrs[4]));
+        builder.landing(Integer.parseInt(lrs[5]));
       }
       return builder.build();
     }
     catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-      //  -6/ERROR] [dimstack/]: layer problem 0,-1,<,3,0,0.125,120
-      //      java.lang.NumberFormatException: For input string: "0.125"
-      //
-      //
-      //-6/ERROR] [dimstack/]: layer problem -1,0,>,118,1,8,8
-      //java.lang.ArrayIndexOutOfBoundsException: 7
       DimstackMod.LOGGER.error("layer problem " + layer + " || " + builder.build(), e);
       return null;
     }
@@ -136,7 +120,7 @@ public class Transit {
   @Override
   public String toString() {
     return "Transit [from=" + from + ", to=" + to + ", goesUpwards=" + goesUpwards + ", yLimit=" + yLimit +
-        ", pos=" + pos + ", relative=" + relative + ", ratio=" + ratio + ", keyMeta=" + keyMeta + ", landing=" + landing + "]";
+        ", pos=" + pos + ", relative=" + relative + ", ratio=" + ratio + ", landing=" + landing + "]";
   }
 
   public static class Builder {
@@ -148,7 +132,6 @@ public class Transit {
     protected BlockPos pos;
     protected boolean relative;
     protected float ratio;
-    protected int keyMeta;
     protected int landing;
 
     public Builder() {}
@@ -185,18 +168,13 @@ public class Transit {
       return this;
     }
 
-    public Builder key(int keyMeta) {
-      this.keyMeta = keyMeta;
-      return this;
-    }
-
     public Builder landing(int landing) {
       this.landing = landing;
       return this;
     }
 
     public Transit build() {
-      return new Transit(from, to, goesUpwards, yLimit, pos, relative, ratio, keyMeta, landing);
+      return new Transit(from, to, goesUpwards, yLimit, pos, relative, ratio, landing);
     }
   }
 }

@@ -55,7 +55,7 @@ public class ActiveTransit implements ITeleporter {
         target = portalPos.down(3);
         teleportInternal(player);
       }
-      TranslationTextComponent to = new TranslationTextComponent("dimstack." + transit.getTargetDim().getPath() + ".name");
+      TranslationTextComponent to = new TranslationTextComponent(DimstackMod.MODID + "." + transit.getTargetDim().getPath());
       player.sendMessage(new TranslationTextComponent("dimstack.teleport.info", to), player.getUniqueID());
     }
     else {
@@ -72,7 +72,7 @@ public class ActiveTransit implements ITeleporter {
           }
         }
       }
-      TranslationTextComponent to = new TranslationTextComponent("dimstack." + transit.getTargetDim().getPath() + ".name");
+      TranslationTextComponent to = new TranslationTextComponent(DimstackMod.MODID + "." + transit.getTargetDim().getPath());
       player.sendMessage(new TranslationTextComponent("dimstack.teleport.info", to), player.getUniqueID());
       target = portalPos.up();
       teleportInternal(player);
