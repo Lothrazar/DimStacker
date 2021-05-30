@@ -117,20 +117,12 @@ dependencies {
  //   compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
  //   runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
-//https://www.curseforge.com/minecraft/mc-mods/the-twilight-forest/files/
-//https://www.curseforge.com/minecraft/mc-mods/voidscape/files/
-  //  implementation fg.deobf("curse.maven:voidscape-251730:3328692")
-
-//    implementation fg.deobf("curse.maven:the-twilight-forest-227639:3325198")
+  //  implementation fg.deobf("curse.maven:the-twilight-forest-227639:3325198")
+  //  implementation fg.deobf("curse.maven:aroma1997s-dimensional-world-60092:2672438")
   
   
-  
-  //  implementation fg.deobf("curse.maven:cyclic-239286:3249448")
-  //  implementation fg.deobf("curse.maven:ctm-267602:3137659")
-  //  implementation fg.deobf("curse.maven:storage-drawers-223852:3180569")
-  //  implementation fg.deobf("curse.maven:refined-storage-243076:3157354")
-  //  implementation fg.deobf("curse.maven:cucumber-272335:3187116")
-  //  implementation fg.deobf("curse.maven:mystical-agriculture-246640:3152061")
+  //  implementation fg.deobf("curse.maven:cyclic-239286:3249448") 
+  //  implementation fg.deobf("curse.maven:storage-drawers-223852:3180569")  
     
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

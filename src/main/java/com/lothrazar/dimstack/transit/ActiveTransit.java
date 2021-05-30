@@ -1,11 +1,13 @@
 package com.lothrazar.dimstack.transit;
 
+import com.lothrazar.dimstack.DimstackMod;
 import com.lothrazar.dimstack.block.PortalTile;
 import com.lothrazar.dimstack.util.DimstackRegistry;
 import com.lothrazar.dimstack.util.UtilWorld;
 import java.util.function.Function;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.PortalInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -13,6 +15,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.ITeleporter;
@@ -31,9 +34,23 @@ public class ActiveTransit implements ITeleporter {
     this.transit = transit;
   }
 
+  @Override
+  public PortalInfo getPortalInfo(Entity entity, ServerWorld destWorld, Function<ServerWorld, PortalInfo> defaultPortalInfo) {
+    PortalInfo pos;
+    //    pos = placeNearExistingCake(destWorld, entity, dimensionPosition(entity, destWorld), entity instanceof PlayerEntity);
+    //    pos = moveToSafeCoords(destWorld, entity, pos != null ? new BlockPos(pos.pos) : dimensionPosition(entity, destWorld));
+    //    pos = customCompat(destWorld, new BlockPos(pos.pos), entity);
+    //
+    //player.setPosition(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D);
+    //
+    return new PortalInfo(new Vector3d(target.getX(), target.getY(), target.getZ()),
+        Vector3d.ZERO, entity.rotationYaw, entity.rotationPitch);
+  }
+
   public void teleport(PlayerEntity player) {
     if (transit.isRelative()) {
       portalPos = createOrFindPortal();
+      DimstackMod.LOGGER.info(portalPos + " found from relative transit" + transit);
       if (source.goesUpwards()) {
         target = portalPos.add(1, 1, 1);
         teleportInternal(player);
@@ -86,7 +103,10 @@ public class ActiveTransit implements ITeleporter {
   @Override
   public Entity placeEntity(Entity newEntity, ServerWorld currentWorld, ServerWorld destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
     newEntity.fallDistance = 0;
-    newEntity.moveToBlockPosAndAngles(target, yaw, newEntity.rotationPitch);
+    //
+    //    newEntity.setPosition(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D);
+    //    newEntity.moveToBlockPosAndAngles(target, yaw, newEntity.rotationPitch);
+    DimstackMod.LOGGER.info(" placeEntity " + target);
     return repositionEntity.apply(false); //Must be false or we fall on vanilla. thanks /Mrbysco/TelePastries/
   }
 
@@ -101,6 +121,7 @@ public class ActiveTransit implements ITeleporter {
       int y = transit.getLanding();
       int z = (int) (src.getZ() * transit.getRatio());
       BlockPos dest = new BlockPos(x, y, z);
+      DimstackMod.LOGGER.info("portal starting at " + dest);
       if (source.goesUpwards()) { //We just went up, so search upwards.
         while (true) {
           dest = dest.up(); // dest.setPos(x, y + 1, z)
@@ -123,7 +144,9 @@ public class ActiveTransit implements ITeleporter {
       }
       destination = dest.toImmutable();
     }
-    else destination = source.getTarget();
+    else {
+      destination = source.getTarget();
+    }
     BlockState dest = world.getBlockState(destination);
     if (dest.getBlock() != DimstackRegistry.PORTAL.get()) {
       world.setBlockState(destination, DimstackRegistry.PORTAL.get().getDefaultState(), 2);

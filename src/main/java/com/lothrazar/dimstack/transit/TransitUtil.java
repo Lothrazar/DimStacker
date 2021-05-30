@@ -1,5 +1,6 @@
 package com.lothrazar.dimstack.transit;
 
+import com.lothrazar.dimstack.DimstackMod;
 import com.lothrazar.dimstack.block.PortalTile;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -16,6 +17,7 @@ public class TransitUtil {
   public static void buildStructure(PortalTile tile) {
     World world = tile.getWorld();
     BlockPos pos = tile.getPos();
+    DimstackMod.LOGGER.info("build NEW structure at " + tile.getPos());
     for (int x = -2; x <= 2; x++) {
       for (int z = -2; z <= 2; z++) {
         for (int y = !tile.goesUpwards() ? 1 : -3; y <= (!tile.goesUpwards() ? 3 : -1); y++)

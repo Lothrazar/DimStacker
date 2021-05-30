@@ -8,24 +8,11 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = DimstackMod.MODID)
 public class DimstackClient {
-
-  public static void setup() {
-    //    initColours();
-  }
-
-  @SubscribeEvent
-  public static void models(ModelRegistryEvent e) {
-    //    ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(DimstackMod.PORTAL), 0, new ModelResourceLocation(DimstackMod.PORTAL.getRegistryName(), "normal"));
-    //    for (Transit t : TransitManager.getAllTransits()) {
-    //      ModelLoader.setCustomModelResourceLocation(DimstackMod.KEY, t.getKeyMeta(), new ModelResourceLocation(DimstackMod.KEY.getRegistryName(), "inventory"));
-    //    }
-  }
 
   @SubscribeEvent
   public static void colors(ColorHandlerEvent.Item e) {

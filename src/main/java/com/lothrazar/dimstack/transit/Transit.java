@@ -104,8 +104,8 @@ public class Transit {
 
   public static Transit fromString(String layer, boolean relative) {
     String[] lrs = layer.split(",");
+    Transit.Builder builder = Transit.builder();
     try {
-      Transit.Builder builder = Transit.builder();
       builder.from(ResourceLocation.tryCreate(lrs[0]));
       builder.to(ResourceLocation.tryCreate(lrs[1]));
       builder.goesUpwards(">".equalsIgnoreCase(lrs[2]));
@@ -122,9 +122,20 @@ public class Transit {
       return builder.build();
     }
     catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-      DimstackMod.LOGGER.error("layer problem " + layer, e);
+      //  -6/ERROR] [dimstack/]: layer problem 0,-1,<,3,0,0.125,120
+      //      java.lang.NumberFormatException: For input string: "0.125"
+      //
+      //
+      //-6/ERROR] [dimstack/]: layer problem -1,0,>,118,1,8,8
+      //java.lang.ArrayIndexOutOfBoundsException: 7
+      DimstackMod.LOGGER.error("layer problem " + layer + " || " + builder.build(), e);
       return null;
     }
+  }
+
+  @Override
+  public String toString() {
+    return "Transit [from=" + from + ", to=" + to + ", goesUpwards=" + goesUpwards + ", yLimit=" + yLimit + ", pos=" + pos + ", relative=" + relative + ", ratio=" + ratio + ", keyMeta=" + keyMeta + ", landing=" + landing + "]";
   }
 
   public static class Builder {
