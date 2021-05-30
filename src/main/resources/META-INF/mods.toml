@@ -18,7 +18,7 @@ modId="dimstack" #mandatory
 version="${file.jarVersion}" #mandatory
  # A display name for the mod
  
-displayName="dimstack" #mandatory
+displayName="Stacking Dimensional Rifts" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
 updateJSONURL="https://raw.githubusercontent.com/Lothrazar/DimStacker/trunk/1.16/update.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI # replace with your website
@@ -29,11 +29,11 @@ logoFile="logoFile.png" #optional
 # A text field displayed in the mod UI
 credits="Thanks to forge fml mcp Mojang" #optional
 # A text field displayed in the mod UI
-authors="Lothrazar" #optional
+authors="Lothrazar, Shadows_of_Fire" #optional
 # The description text for the mod (multi line!) (#mandatory)
 
 description='''
-dimstack by Lothrazar
+Lets you stack dimensions using rifts to create vertically stacked dimensions.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.dimstack]] #optional
