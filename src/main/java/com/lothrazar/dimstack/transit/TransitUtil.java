@@ -1,6 +1,6 @@
 package com.lothrazar.dimstack.transit;
 
-import com.lothrazar.dimstack.PortalTile;
+import com.lothrazar.dimstack.block.PortalTile;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

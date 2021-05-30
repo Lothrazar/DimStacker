@@ -1,8 +1,11 @@
-package com.lothrazar.dimstack;
+package com.lothrazar.dimstack.item;
 
+import com.lothrazar.dimstack.DimstackMod;
+import com.lothrazar.dimstack.block.PortalTile;
 import com.lothrazar.dimstack.transit.Transit;
 import com.lothrazar.dimstack.transit.TransitManager;
 import com.lothrazar.dimstack.transit.TransitUtil;
+import com.lothrazar.dimstack.util.DimstackRegistry;
 import java.util.List;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -35,7 +38,7 @@ public class KeyItem extends Item {
     Hand hand = context.getHand();
     Transit t = TransitManager.getTargetFor(world, pos);
     if (t != null && t.getKeyMeta() == player.getHeldItem(hand).getOrCreateTag().getInt("keymeta")) {
-      world.setBlockState(pos, DimstackMod.PORTAL.getDefaultState());
+      world.setBlockState(pos, DimstackRegistry.PORTAL.get().getDefaultState());
       PortalTile tile = (PortalTile) world.getTileEntity(pos);
       tile.setGoesUpwards(t.goesUpwards());
       player.getCooldownTracker().setCooldown(this, 300);

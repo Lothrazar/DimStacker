@@ -1,10 +1,8 @@
 package com.lothrazar.dimstack.transit;
 
-import com.lothrazar.dimstack.DimConfig;
-import com.lothrazar.dimstack.DimstackMod;
-import com.lothrazar.dimstack.PortalTile;
-import com.lothrazar.dimstack.UtilWorld;
-import com.lothrazar.dimstack.transit.Transit.TransitParseException;
+import com.lothrazar.dimstack.DimstackConfig;
+import com.lothrazar.dimstack.block.PortalTile;
+import com.lothrazar.dimstack.util.UtilWorld;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -56,24 +54,18 @@ public class TransitManager {
     return TRANSITS;
   }
 
-  public static void reload(DimConfig config) {
+  public static void reload() {
     TRANSITS.clear();
-    for (String layer : config.getAbsoluteTransits()) {
-      try {
-        TRANSITS.add(Transit.fromString(layer, false));
-      }
-      catch (TransitParseException e) {
-        DimstackMod.LOGGER.error("Invalid specific transition {} will be ignored.", e.getFailed());
-        e.getCause().printStackTrace();
+    for (String layer : DimstackConfig.getAbsoluteTransits()) {
+      Transit fromLayer = Transit.fromString(layer, false);
+      if (fromLayer != null) {
+        TRANSITS.add(fromLayer);
       }
     }
-    for (String layer : config.getRelativeTransits()) {
-      try {
+    for (String layer : DimstackConfig.getRelativeTransits()) {
+      Transit fromLayer = Transit.fromString(layer, false);
+      if (fromLayer != null) {
         TRANSITS.add(Transit.fromString(layer, true));
-      }
-      catch (TransitParseException e) {
-        DimstackMod.LOGGER.error("Invalid relative transition {} will be ignored.", e.getFailed());
-        e.getCause().printStackTrace();
       }
     }
   }

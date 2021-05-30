@@ -1,5 +1,6 @@
-package com.lothrazar.dimstack;
+package com.lothrazar.dimstack.block;
 
+import com.lothrazar.dimstack.util.DimstackRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -12,7 +13,7 @@ public class PortalTile extends TileEntity {
   private boolean goesUp = false;
 
   public PortalTile() {
-    super(DimstackMod.portalTile);
+    super(DimstackRegistry.PORTAL_TILE.get());
   }
 
   public BlockPos getTarget() {

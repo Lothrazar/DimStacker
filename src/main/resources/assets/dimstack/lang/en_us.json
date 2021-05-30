@@ -1,0 +1,11 @@
+{
+    "dimstack.tooltip": "Dimensional Keystone: %s -> %s",
+    "item.dimstack.key": "Dimensional Key",
+    "block.dimstack.portal": "Dimensional Portal",
+    "dimstack.the_end": "The End",
+    "dimstack.erebus": "The Erebus",
+    "dimstack.overworld": "The Overworld",
+    "dimstack.the_beneath": "The Beneath",
+    "dimstack.the_nether": "The Nether",
+    "dimstack.teleport.info": "Rift Activated. Travelling to %s."
+}

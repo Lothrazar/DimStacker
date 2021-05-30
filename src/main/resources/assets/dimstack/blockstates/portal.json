@@ -1,5 +1,5 @@
 {
     "variants": {
-        "normal": { "model": "dimstack:portal" }
+        "": { "model": "dimstack:portal" }
     }
 }

@@ -1,11 +1,13 @@
-package com.lothrazar.dimstack;
+package com.lothrazar.dimstack.block;
 
+import com.lothrazar.dimstack.DimstackMod;
 import com.lothrazar.dimstack.transit.ActiveTransit;
 import com.lothrazar.dimstack.transit.Transit;
 import com.lothrazar.dimstack.transit.TransitManager;
+import com.lothrazar.dimstack.util.DimstackRegistry;
+import com.lothrazar.dimstack.util.UtilWorld;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -20,8 +22,8 @@ public class PortalBlock extends Block {
 
   public static final VoxelShape PORTAL_AABB = Block.makeCuboidShape(0, 0.4, 0, 1, 0.6, 1);
 
-  public PortalBlock() {
-    super(Block.Properties.create(Material.PORTAL).hardnessAndResistance(-1));
+  public PortalBlock(Properties properties) {
+    super(properties.hardnessAndResistance(-1));
     //    this.setBlockUnbreakable(); 
   }
 
@@ -39,7 +41,9 @@ public class PortalBlock extends Block {
     if (entity instanceof PlayerEntity && entity.isAlive()) {
       if (!world.isRemote && !entity.isOnePlayerRiding() && !entity.isBeingRidden() && entity.isNonBoss()) {
         PlayerEntity playerMP = (PlayerEntity) entity;
-        if (playerMP.getCooldownTracker().hasCooldown(DimstackMod.PORTAL_I)) return;
+        if (playerMP.getCooldownTracker().hasCooldown(DimstackRegistry.PORTAL_I.get())) {
+          return;
+        }
         PortalTile tile = (PortalTile) world.getTileEntity(pos);
         Transit t = TransitManager.getTargetFor(tile);
         if (t == null || tile == null) return;
@@ -48,7 +52,7 @@ public class PortalBlock extends Block {
         try {
           ActiveTransit teleporter = new ActiveTransit(targetDim, tile, t);
           teleporter.teleport(playerMP);
-          playerMP.getCooldownTracker().setCooldown(DimstackMod.PORTAL_I, 20);
+          playerMP.getCooldownTracker().setCooldown(DimstackRegistry.PORTAL_I.get(), 20);
         }
         catch (Exception e) {
           DimstackMod.LOGGER.error("There has been an exception during an attempted teleportation.", e);

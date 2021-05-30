@@ -117,8 +117,11 @@ dependencies {
  //   compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
  //   runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
+//https://www.curseforge.com/minecraft/mc-mods/the-twilight-forest/files/
+//https://www.curseforge.com/minecraft/mc-mods/voidscape/files/
+    implementation fg.deobf("curse.maven:voidscape-251730:3328692")
 
-  //  implementation fg.deobf("curse.maven:simple-storage-network-268495:3257204")
+    implementation fg.deobf("curse.maven:the-twilight-forest-227639:3325198")
   //  implementation fg.deobf("curse.maven:cyclic-239286:3249448")
   //  implementation fg.deobf("curse.maven:ctm-267602:3137659")
   //  implementation fg.deobf("curse.maven:storage-drawers-223852:3180569")

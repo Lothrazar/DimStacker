@@ -1,8 +1,8 @@
 package com.lothrazar.dimstack.transit;
 
-import com.lothrazar.dimstack.DimstackMod;
-import com.lothrazar.dimstack.PortalTile;
-import com.lothrazar.dimstack.UtilWorld;
+import com.lothrazar.dimstack.block.PortalTile;
+import com.lothrazar.dimstack.util.DimstackRegistry;
+import com.lothrazar.dimstack.util.UtilWorld;
 import java.util.function.Function;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -125,8 +125,8 @@ public class ActiveTransit implements ITeleporter {
     }
     else destination = source.getTarget();
     BlockState dest = world.getBlockState(destination);
-    if (dest.getBlock() != DimstackMod.PORTAL) {
-      world.setBlockState(destination, DimstackMod.PORTAL.getDefaultState(), 2);
+    if (dest.getBlock() != DimstackRegistry.PORTAL.get()) {
+      world.setBlockState(destination, DimstackRegistry.PORTAL.get().getDefaultState(), 2);
       PortalTile tile = (PortalTile) world.getTileEntity(destination);
       tile.setGoesUpwards(!source.goesUpwards());
       tile.setTarget(source.getPos());

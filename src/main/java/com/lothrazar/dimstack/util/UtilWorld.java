@@ -1,4 +1,4 @@
-package com.lothrazar.dimstack;
+package com.lothrazar.dimstack.util;
 
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;

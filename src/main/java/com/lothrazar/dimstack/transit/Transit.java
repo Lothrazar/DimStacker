@@ -122,7 +122,8 @@ public class Transit {
       return builder.build();
     }
     catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-      throw new TransitParseException(layer, e);
+      DimstackMod.LOGGER.error("layer problem " + layer, e);
+      return null;
     }
   }
 
@@ -184,26 +185,6 @@ public class Transit {
 
     public Transit build() {
       return new Transit(from, to, goesUpwards, yLimit, pos, relative, ratio, keyMeta, landing);
-    }
-  }
-
-  public static class TransitParseException extends RuntimeException {
-
-    String failed;
-    Exception cause;
-
-    public TransitParseException(String failed, Exception cause) {
-      this.failed = failed;
-      this.cause = cause;
-    }
-
-    public String getFailed() {
-      return failed;
-    }
-
-    @Override
-    public Exception getCause() {
-      return cause;
     }
   }
 }
