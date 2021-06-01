@@ -55,9 +55,4 @@ public class PortalTile extends TileEntity {
   public void setTransit(Transit t) {
     this.transit = t;
   }
-
-  public void setGoesUpwards(boolean b) {
-    //fuck
-    // TODO Auto-generated method stub
-  }
 }

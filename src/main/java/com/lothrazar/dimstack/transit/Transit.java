@@ -32,6 +32,8 @@ public class Transit {
     this.landing = landing;
   }
 
+  public Transit() {}
+
   public Transit(CompoundNBT tag) {
     read(tag);
   }

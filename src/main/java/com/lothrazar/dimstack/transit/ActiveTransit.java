@@ -150,7 +150,11 @@ public class ActiveTransit implements ITeleporter {
     if (dest.getBlock() != DimstackRegistry.PORTAL.get()) {
       world.setBlockState(destination, DimstackRegistry.PORTAL.get().getDefaultState(), 2);
       PortalTile tile = (PortalTile) world.getTileEntity(destination);
-      tile.setGoesUpwards(!source.goesUpwards());
+      Transit opposite = new Transit();
+      opposite.from = transit.to;
+      opposite.to = transit.from;
+      opposite.goesUpwards = !source.goesUpwards(); //!transit.goesUpwards; 
+      tile.setTransit(opposite);
       tile.setTarget(source.getPos());
       source.setTarget(tile.getPos());
       TransitUtil.buildStructure(tile);

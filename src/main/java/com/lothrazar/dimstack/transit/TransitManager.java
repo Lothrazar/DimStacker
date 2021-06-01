@@ -44,7 +44,10 @@ public class TransitManager {
   public static Transit getTargetFor(PortalTile tile) {
     for (Transit t : TRANSITS) {
       String id = UtilWorld.dimensionToString(tile.getWorld());
-      if (t.getSourceDim().toString().equalsIgnoreCase(id)) {
+      // also tranit and tile must target the same place
+      if (t.getTargetDim().toString().equalsIgnoreCase(tile.getTransit().getTargetDim().toString())
+          &&
+          t.getSourceDim().toString().equalsIgnoreCase(id)) {
         if (t.goesUpwards() == tile.goesUpwards()) {
           return t;
         }

@@ -23,8 +23,7 @@ public class PortalBlock extends Block {
   public static final VoxelShape PORTAL_AABB = Block.makeCuboidShape(0, 0.4, 0, 1, 0.6, 1);
 
   public PortalBlock(Properties properties) {
-    super(properties.hardnessAndResistance(-1));
-    //    this.setBlockUnbreakable(); 
+    super(properties.hardnessAndResistance(-1).setLightLevel(state -> 15));
   }
 
   @Override
@@ -77,14 +76,4 @@ public class PortalBlock extends Block {
   public int getOpacity(BlockState state, IBlockReader worldIn, BlockPos pos) {
     return 0;
   }
-  //registry like cyclic IF needed
-  //  @Override
-  //  public BlockRenderLayer getRenderLayer() {
-  //    return BlockRenderLayer.TRANSLUCENT;
-  //  }
-  // TODO: steal from ABD magma etc
-  //  @Override
-  //  public int getLightValue(BlockState state) {
-  //    return 15;
-  //  }
 }

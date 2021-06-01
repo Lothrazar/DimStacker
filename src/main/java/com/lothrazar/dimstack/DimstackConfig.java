@@ -51,6 +51,12 @@ public class DimstackConfig {
         //from twilight up to nether 
         "twilightforest:twilightforest,minecraft:the_nether,>,218,1,8",
         //
+        //same but overworld and twilight to test
+        //from nether down to twilight
+        "minecraft:overworld,twilightforest:twilightforest,<,8,1,220",
+        //from twilight up to nether 
+        "twilightforest:twilightforest,minecraft:overworld,>,218,1,8",
+        //
         //from nether down to u
         "minecraft:the_nether,undergarden:undergarden,<,8,1,220",
         //from u up to nether 
