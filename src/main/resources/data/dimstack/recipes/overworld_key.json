@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "r",
+    "i",
+    "k"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:bone_block"
+    },
+    "i": {
+      "item": "minecraft:grass_block"
+    },
+    "k": {
+      "item": "minecraft:nether_wart"
+    }
+  },
+  "result": {
+    "item": "dimstack:overworld_key",
+    "count": 1
+  }
+}

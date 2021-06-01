@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "r",
+    "i",
+    "k"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:grass_block"
+    },
+    "i": {
+      "item": "minecraft:nether_brick"
+    },
+    "k": {
+      "item": "minecraft:emerald"
+    }
+  },
+  "result": {
+    "item": "dimstack:gaia_key",
+    "count": 1
+  }
+}

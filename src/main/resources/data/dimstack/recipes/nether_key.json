@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "r",
+    "i",
+    "k"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:gunpowder"
+    },
+    "i": {
+      "item": "minecraft:grass_block"
+    },
+    "k": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "result": {
+    "item": "dimstack:nether_key",
+    "count": 1
+  }
+}

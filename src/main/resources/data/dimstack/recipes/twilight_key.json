@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "r",
+    "i",
+    "k"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone_block"
+    },
+    "i": {
+      "item": "minecraft:poppy"
+    },
+    "k": {
+      "item": "minecraft:dandelion"
+    }
+  },
+  "result": {
+    "item": "dimstack:twilight_key",
+    "count": 1
+  }
+}

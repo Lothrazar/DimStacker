@@ -5,11 +5,12 @@
     "item.dimstack.nether_key": "Nether Rift Key",
     "item.dimstack.end_key": "End Rift Key",
     "item.dimstack.twilight_key": "Twilight Rift Key",
+    "item.dimstack.lostcities_key": "Lost Cities Rift Key",
+    "item.dimstack.gaia_key": "Gaia Rift Key",
+    "item.dimstack.undergarden_key": "Undergarden Rift Key",
     "dimstack.the_end": "The End",
-    "dimstack.erebus": "The Erebus",
     "dimstack.overworld": "The Overworld",
     "dimstack.twilightforest": "Twilight Forest",
-    "dimstack.the_beneath": "The Beneath",
     "dimstack.the_nether": "The Nether",
     "dimstack.teleport.info": "Rift Activated. Travelling to %s"
 }

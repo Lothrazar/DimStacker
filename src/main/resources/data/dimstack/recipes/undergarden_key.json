@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "r",
+    "i",
+    "k"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone_block"
+    },
+    "i": {
+      "item": "minecraft:end_stone"
+    },
+    "k": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "dimstack:undergarden_key",
+    "count": 1
+  }
+}

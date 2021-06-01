@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "r",
+    "i",
+    "k"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:iron_block"
+    },
+    "i": {
+      "item": "minecraft:nether_star"
+    },
+    "k": {
+      "item": "minecraft:netherrack"
+    }
+  },
+  "result": {
+    "item": "dimstack:end_key",
+    "count": 1
+  }
+}

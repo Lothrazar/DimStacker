@@ -11,6 +11,7 @@ public class PortalTile extends TileEntity {
   public static final BlockPos UNLINKED = new BlockPos(-1, -1, -1);
   private BlockPos target = UNLINKED;
   private boolean goesUp = false;
+  //  public Transit transit;
 
   public PortalTile() {
     super(DimstackRegistry.PORTAL_TILE.get());
@@ -36,6 +37,7 @@ public class PortalTile extends TileEntity {
 
   @Override
   public void read(BlockState bs, CompoundNBT tag) {
+    //    transit = Transit.fr
     target = BlockPos.fromLong(tag.getLong("target"));
     goesUp = tag.getBoolean("up");
     super.read(bs, tag);

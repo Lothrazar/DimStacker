@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "r",
+    "i",
+    "k"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:gold_block"
+    },
+    "i": {
+      "item": "minecraft:blaze_rod"
+    },
+    "k": {
+      "item": "minecraft:stone"
+    }
+  },
+  "result": {
+    "item": "dimstack:lostcities_key",
+    "count": 1
+  }
+}

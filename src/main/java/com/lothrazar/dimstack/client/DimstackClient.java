@@ -29,7 +29,13 @@ public class DimstackClient {
         }
       }
       return -1;
-    }, DimstackRegistry.OVERWORLD_KEY.get(), DimstackRegistry.END_KEY.get(), DimstackRegistry.NETHER_KEY.get(), DimstackRegistry.TWILIGHT_KEY.get());
+    }, DimstackRegistry.OVERWORLD_KEY.get(),
+        DimstackRegistry.END_KEY.get(),
+        DimstackRegistry.NETHER_KEY.get(),
+        //modded keys
+        DimstackRegistry.LOSTCITIES_KEY.get(),
+        DimstackRegistry.GAIA_KEY.get(),
+        DimstackRegistry.UNDERGARDEN_KEY.get(), DimstackRegistry.TWILIGHT_KEY.get());
     e.getItemColors().register((stack, tintIndex) -> {
       if (tintIndex == 0) {
         String dim = UtilWorld.dimensionToString(Minecraft.getInstance().world);
