@@ -2,6 +2,8 @@ package com.lothrazar.dimstack.transit;
 
 import com.lothrazar.dimstack.DimstackMod;
 import javax.annotation.Nullable;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
@@ -10,14 +12,14 @@ import net.minecraft.util.math.BlockPos;
  */
 public class Transit {
 
-  protected final ResourceLocation from;
-  protected final ResourceLocation to;
-  protected final boolean goesUpwards;
-  protected final int yLimit;
-  protected final BlockPos pos;
-  protected final boolean relative;
-  protected final float ratio;
-  protected final int landing;
+  protected ResourceLocation from;
+  protected ResourceLocation to;
+  protected boolean goesUpwards;
+  protected int yLimit;
+  protected BlockPos pos;
+  protected boolean relative;
+  protected float ratio;
+  protected int landing;
 
   public Transit(ResourceLocation from, ResourceLocation to, boolean top, int yLimit, BlockPos pos, boolean relative, float ratio, int landing) {
     this.from = from;
@@ -28,6 +30,37 @@ public class Transit {
     this.relative = relative;
     this.ratio = ratio;
     this.landing = landing;
+  }
+
+  public Transit(CompoundNBT tag) {
+    read(tag);
+  }
+
+  public void read(CompoundNBT tag) {
+    from = ResourceLocation.tryCreate(tag.getString("from"));
+    to = ResourceLocation.tryCreate(tag.getString("to"));
+    goesUpwards = tag.getBoolean("up");
+    yLimit = tag.getInt("ylimit");
+    landing = tag.getInt("landing");
+    ratio = tag.getFloat("ratio");
+    if (tag.contains("pos")) {
+      pos = NBTUtil.readBlockPos(tag.getCompound("pos"));
+    }
+  }
+
+  public CompoundNBT write() {
+    CompoundNBT tag = new CompoundNBT();
+    tag.putString("from", from.toString());
+    tag.putString("to", to.toString());
+    tag.putBoolean("up", goesUpwards);
+    tag.putInt("ylimit", yLimit);
+    tag.putInt("landing", landing);
+    tag.putFloat("ratio", ratio);
+    if (pos != null) {
+      tag.put("pos", NBTUtil.writeBlockPos(pos));
+    }
+    //
+    return tag;
   }
 
   /**
@@ -130,7 +163,7 @@ public class Transit {
     protected boolean goesUpwards;
     protected int yLimit;
     protected BlockPos pos;
-    protected boolean relative;
+    protected boolean relative = true; //assumed true until pos is set
     protected float ratio;
     protected int landing;
 

@@ -71,8 +71,5 @@ public class TransitManager {
         TRANSITS.add(fromLayer);
       }
     }
-    // 
-    //
-    // tooltip cache for keys
   }
 }

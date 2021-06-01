@@ -1,5 +1,6 @@
 package com.lothrazar.dimstack.block;
 
+import com.lothrazar.dimstack.transit.Transit;
 import com.lothrazar.dimstack.util.DimstackRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -10,8 +11,7 @@ public class PortalTile extends TileEntity {
 
   public static final BlockPos UNLINKED = new BlockPos(-1, -1, -1);
   private BlockPos target = UNLINKED;
-  private boolean goesUp = false;
-  //  public Transit transit;
+  private Transit transit;
 
   public PortalTile() {
     super(DimstackRegistry.PORTAL_TILE.get());
@@ -22,7 +22,7 @@ public class PortalTile extends TileEntity {
   }
 
   public boolean goesUpwards() {
-    return goesUp;
+    return transit == null ? false : transit.goesUpwards();
   }
 
   public void setTarget(BlockPos pos) {
@@ -30,23 +30,34 @@ public class PortalTile extends TileEntity {
     markDirty();
   }
 
-  public void setGoesUpwards(boolean top) {
-    this.goesUp = top;
-    markDirty();
-  }
-
   @Override
   public void read(BlockState bs, CompoundNBT tag) {
-    //    transit = Transit.fr
+    if (tag.contains("transit")) {
+      transit = new Transit(tag.getCompound("transit"));
+    }
     target = BlockPos.fromLong(tag.getLong("target"));
-    goesUp = tag.getBoolean("up");
     super.read(bs, tag);
   }
 
   @Override
   public CompoundNBT write(CompoundNBT tag) {
+    if (transit != null) {
+      tag.put("transit", transit.write());
+    }
     tag.putLong("target", target.toLong());
-    tag.putBoolean("up", goesUp);
     return super.write(tag);
+  }
+
+  public Transit getTransit() {
+    return transit;
+  }
+
+  public void setTransit(Transit t) {
+    this.transit = t;
+  }
+
+  public void setGoesUpwards(boolean b) {
+    //fuck
+    // TODO Auto-generated method stub
   }
 }

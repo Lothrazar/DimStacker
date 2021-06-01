@@ -44,7 +44,8 @@ public class KeyItem extends Item {
       // && t.getKeyMeta() == player.getHeldItem(hand).getOrCreateTag().getInt("keymeta")
       world.setBlockState(pos, DimstackRegistry.PORTAL.get().getDefaultState());
       PortalTile tile = (PortalTile) world.getTileEntity(pos);
-      tile.setGoesUpwards(t.goesUpwards());
+      tile.setTransit(t);
+      tile.markDirty();
       player.getCooldownTracker().setCooldown(this, 300);
       player.getHeldItem(hand).shrink(1); // todo DoesConsume trigger in T
       TransitUtil.buildStructure(tile);
@@ -64,11 +65,4 @@ public class KeyItem extends Item {
     //      }
     //    }
   }
-  //
-  //  @Override
-  //  public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-  //    if (this.isInCreativeTab(tab)) for (Transit t : TransitManager.getAllTransits()) {
-  //      items.add(new ItemStack(this, 1, t.getKeyMeta()));
-  //    }
-  //  }
 }

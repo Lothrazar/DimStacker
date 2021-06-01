@@ -130,6 +130,7 @@ public class ActiveTransit implements ITeleporter {
         }
       }
       else { //We just went down, so search downwards.
+        //todo : opposite transit?
         BlockState state = world.getBlockState(dest);
         while (true) {
           if (y <= 0 || state.getBlock() != Blocks.AIR && state.getBlock() != Blocks.BEDROCK) {
