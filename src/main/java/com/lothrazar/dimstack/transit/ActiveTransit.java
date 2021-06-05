@@ -3,6 +3,7 @@ package com.lothrazar.dimstack.transit;
 import com.lothrazar.dimstack.DimstackMod;
 import com.lothrazar.dimstack.block.PortalTile;
 import com.lothrazar.dimstack.util.DimstackRegistry;
+import com.lothrazar.dimstack.util.TransitUtil;
 import com.lothrazar.dimstack.util.UtilWorld;
 import java.util.function.Function;
 import net.minecraft.block.BlockState;

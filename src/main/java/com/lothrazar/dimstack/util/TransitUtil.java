@@ -1,4 +1,4 @@
-package com.lothrazar.dimstack.transit;
+package com.lothrazar.dimstack.util;
 
 import com.lothrazar.dimstack.block.PortalTile;
 import net.minecraft.block.Blocks;

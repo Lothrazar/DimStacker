@@ -14,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -100,11 +101,17 @@ public class TransitManager {
 
   private static void buildTooltip(Transit t) {
     List<ITextComponent> strings = new ArrayList<>();
-    strings.add(new StringTextComponent(t.from.toString()));
-    strings.add(new StringTextComponent(t.from + " => " + t.to));
-    String tt = "dimstack.riftkey." + (t.goesUpwards ? "up" : "down");
-    strings.add(new TranslationTextComponent(tt));
-    strings.add(new StringTextComponent(t.to.toString()));
+    if (t.goesUpwards) {
+      // goes up so from is below
+      strings.add(new StringTextComponent(t.to.toString()).mergeStyle(TextFormatting.LIGHT_PURPLE));
+      strings.add(new TranslationTextComponent("dimstack.riftkey." + (t.goesUpwards ? "up" : "down")).mergeStyle(TextFormatting.GRAY));
+      strings.add(new StringTextComponent(t.from.toString()).mergeStyle(TextFormatting.DARK_PURPLE));
+    }
+    else { // down
+      strings.add(new StringTextComponent(t.from.toString()).mergeStyle(TextFormatting.DARK_PURPLE));
+      strings.add(new TranslationTextComponent("dimstack.riftkey." + (t.goesUpwards ? "up" : "down")).mergeStyle(TextFormatting.GRAY));
+      strings.add(new StringTextComponent(t.to.toString()).mergeStyle(TextFormatting.LIGHT_PURPLE));
+    }
     TIPS.put(t.itemId, strings);
   }
 

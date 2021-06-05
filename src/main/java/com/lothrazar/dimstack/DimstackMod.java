@@ -1,11 +1,13 @@
 package com.lothrazar.dimstack;
 
+import com.lothrazar.dimstack.event.ClientEvents;
+import com.lothrazar.dimstack.event.ItemUseHandler;
 import com.lothrazar.dimstack.transit.TransitManager;
 import com.lothrazar.dimstack.util.DimstackRegistry;
-import com.lothrazar.dimstack.util.ItemUseHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -35,7 +37,12 @@ public class DimstackMod {
     DimstackRegistry.TILE_ENTITIES.register(eventBus);
     DimstackConfig.setup(FMLPaths.CONFIGDIR.get().resolve(MODID + ".toml"));
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
     MinecraftForge.EVENT_BUS.register(new ItemUseHandler());
+  }
+
+  private void setupClient(final FMLClientSetupEvent event) {
+    MinecraftForge.EVENT_BUS.register(new ClientEvents());
   }
 
   private void setup(final FMLCommonSetupEvent event) {

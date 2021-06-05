@@ -1,7 +1,5 @@
-package com.lothrazar.dimstack.client;
+package com.lothrazar.dimstack;
 
-import com.lothrazar.dimstack.DimstackConfig;
-import com.lothrazar.dimstack.DimstackMod;
 import com.lothrazar.dimstack.item.KeyItem;
 import com.lothrazar.dimstack.util.DimstackRegistry;
 import com.lothrazar.dimstack.util.UtilWorld;
@@ -14,7 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT, modid = DimstackMod.MODID)
-public class DimstackClient {
+public class ClientColourRegistry {
 
   @SubscribeEvent
   public static void colors(ColorHandlerEvent.Item e) {
