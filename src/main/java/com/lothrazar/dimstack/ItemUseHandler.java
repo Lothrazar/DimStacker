@@ -5,14 +5,25 @@ import com.lothrazar.dimstack.transit.Transit;
 import com.lothrazar.dimstack.transit.TransitManager;
 import com.lothrazar.dimstack.transit.TransitUtil;
 import com.lothrazar.dimstack.util.DimstackRegistry;
+import java.util.List;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemUseHandler {
+
+  @SubscribeEvent
+  public void onTool(ItemTooltipEvent event) {
+    List<ITextComponent> tips = TransitManager.getTooltip(event.getItemStack());
+    if (tips != null) {
+      event.getToolTip().addAll(tips);
+    }
+  }
 
   @SubscribeEvent
   public void onUse(PlayerInteractEvent.RightClickBlock event) {

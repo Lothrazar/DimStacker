@@ -12,5 +12,8 @@
     "dimstack.overworld": "The Overworld",
     "dimstack.twilightforest": "Twilight Forest",
     "dimstack.the_nether": "The Nether",
-    "dimstack.teleport.info": "Rift Activated. Travelling to %s"
+    "dimstack.teleport.info": "Rift Activated. Travelling to %s",
+    "dimstack.riftkey":"Keystone to a Dimensional Rift",
+    "dimstack.riftkey.up":"Key to a rising Dimensional Rift",
+    "dimstack.riftkey.down":"Key to a sinking Dimensional Rift"
 }

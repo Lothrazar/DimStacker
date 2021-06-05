@@ -5,10 +5,15 @@ import com.lothrazar.dimstack.DimstackMod;
 import com.lothrazar.dimstack.block.PortalTile;
 import com.lothrazar.dimstack.util.UtilWorld;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 public class TransitManager {
@@ -75,16 +80,38 @@ public class TransitManager {
       Transit fromLayer = Transit.fromString(layer, false);
       if (fromLayer != null) {
         TRANSITS.add(fromLayer);
+        buildTooltip(fromLayer);
       }
     }
     for (String layer : DimstackConfig.getRelativeTransits()) {
       Transit fromLayer = Transit.fromString(layer, true);
       if (fromLayer != null) {
         TRANSITS.add(fromLayer);
+        buildTooltip(fromLayer);
       }
     }
     if (TRANSITS.size() == 0) {
       DimstackMod.LOGGER.error("Error: Zero rifts detected, validate dimstack.toml config entries");
     }
+  }
+
+  static Map<ResourceLocation, List<ITextComponent>> TIPS = new HashMap<>();
+
+  private static void buildTooltip(Transit t) {
+    List<ITextComponent> strings = new ArrayList<>();
+    //    strings.add(new TranslationTextComponent("dimstack.riftkey"));
+    strings.add(new StringTextComponent(t.from + " => " + t.to));
+    //    String tt = "dimstack.riftkey." + (t.goesUpwards ? "up" : "down");
+    //    strings.add(new TranslationTextComponent(tt));
+    //
+    TIPS.put(t.itemId, strings);
+  }
+
+  public static List<ITextComponent> getTooltip(ItemStack itemStack) {
+    ResourceLocation id = itemStack.getItem().getRegistryName();
+    if (TIPS.containsKey(id)) {
+      return TIPS.get(id);
+    }
+    return null;
   }
 }
