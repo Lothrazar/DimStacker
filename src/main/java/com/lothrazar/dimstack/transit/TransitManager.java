@@ -1,6 +1,7 @@
 package com.lothrazar.dimstack.transit;
 
 import com.lothrazar.dimstack.DimstackConfig;
+import com.lothrazar.dimstack.DimstackMod;
 import com.lothrazar.dimstack.block.PortalTile;
 import com.lothrazar.dimstack.item.KeyItem;
 import com.lothrazar.dimstack.util.UtilWorld;
@@ -73,6 +74,9 @@ public class TransitManager {
       if (fromLayer != null) {
         TRANSITS.add(fromLayer);
       }
+    }
+    if (TRANSITS.size() == 0) {
+      DimstackMod.LOGGER.error("Error: Zero rifts detected, validate dimstack.toml config entries");
     }
   }
 }

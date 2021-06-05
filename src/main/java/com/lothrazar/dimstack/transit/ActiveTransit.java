@@ -47,6 +47,9 @@ public class ActiveTransit implements ITeleporter {
     if (transit.isRelative()) {
       portalPos = createOrFindPortal();
       DimstackMod.LOGGER.info(portalPos + " found from relative transit" + transit);
+      if (portalPos == null) {
+        return;
+      }
       if (source.goesUpwards()) {
         target = portalPos.add(1, 1, 1);
         teleportInternal(player);
@@ -61,6 +64,9 @@ public class ActiveTransit implements ITeleporter {
     }
     else {
       portalPos = transit.getTargetPos();
+      if (portalPos == null) {
+        return;
+      }
       for (int x = -1; x <= 1; x++) {
         for (int z = -1; z <= 1; z++) {
           world.setBlockState(portalPos.add(x, 0, z), Blocks.STONE_BRICKS.getDefaultState(), 2);
@@ -112,6 +118,11 @@ public class ActiveTransit implements ITeleporter {
    * Looks for the existing portal pair, and if it does not find one, creates it.
    */
   private BlockPos createOrFindPortal() {
+    if (world == null) {
+      // for example: mod not installed for that dimension
+      DimstackMod.LOGGER.error("Null world for rift " + this.transit);
+      return null;
+    }
     BlockPos destination;
     if (source.getTarget().equals(PortalTile.UNLINKED)) {
       BlockPos src = source.getPos();

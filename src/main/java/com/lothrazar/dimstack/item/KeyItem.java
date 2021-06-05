@@ -1,6 +1,5 @@
 package com.lothrazar.dimstack.item;
 
-import com.lothrazar.dimstack.DimstackMod;
 import com.lothrazar.dimstack.block.PortalTile;
 import com.lothrazar.dimstack.transit.Transit;
 import com.lothrazar.dimstack.transit.TransitManager;
@@ -40,8 +39,6 @@ public class KeyItem extends Item {
     Hand hand = context.getHand();
     Transit t = TransitManager.getTargetFor(world, pos, this);
     if (t != null) {
-      DimstackMod.LOGGER.info("t found " + t + player.getHeldItem(hand).getTag());
-      // && t.getKeyMeta() == player.getHeldItem(hand).getOrCreateTag().getInt("keymeta")
       world.setBlockState(pos, DimstackRegistry.PORTAL.get().getDefaultState());
       PortalTile tile = (PortalTile) world.getTileEntity(pos);
       tile.setTransit(t);

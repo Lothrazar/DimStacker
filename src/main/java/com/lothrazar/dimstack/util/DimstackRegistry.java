@@ -31,10 +31,14 @@ public class DimstackRegistry {
   public static final RegistryObject<Item> NETHER_KEY = ITEMS.register("nether_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC), "minecraft:the_nether"));
   public static final RegistryObject<Item> END_KEY = ITEMS.register("end_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC), "minecraft:the_end"));
   //TODO: twilight_key -> dimension id IN CONFIG
-  public static final RegistryObject<Item> TWILIGHT_KEY = ITEMS.register("twilight_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC), "twilightforest:twilightforest"));
-  public static final RegistryObject<Item> LOSTCITIES_KEY = ITEMS.register("lostcities_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC), "lostcities:lostcity"));
-  public static final RegistryObject<Item> GAIA_KEY = ITEMS.register("gaia_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC), "gaiadimension:gaia_dimension"));
-  public static final RegistryObject<Item> UNDERGARDEN_KEY = ITEMS.register("undergarden_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC), "undergarden:undergarden"));
+  public static final RegistryObject<Item> TWILIGHT_KEY = ITEMS.register("twilight_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC)
+      , "twilightforest:twilightforest"));
+  public static final RegistryObject<Item> LOSTCITIES_KEY = ITEMS.register("lostcities_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC)
+      , "lostcities:lostcity"));
+  public static final RegistryObject<Item> GAIA_KEY = ITEMS.register("gaia_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC)
+      , "gaiadimension:gaia_dimension"));
+  public static final RegistryObject<Item> UNDERGARDEN_KEY = ITEMS.register("undergarden_key", () -> new KeyItem(new Item.Properties().group(ItemGroup.MISC)
+      , "undergarden:undergarden"));
   //portal block: again is coded and colored to its from (current) dimension
   //portal block config is only dimension -> color. use same transport config
   public static final RegistryObject<Block> PORTAL = BLOCKS.register("portal", () -> new PortalBlock(Block.Properties.create(Material.PORTAL)));

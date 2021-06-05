@@ -2,16 +2,17 @@ package com.lothrazar.dimstack;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
-import com.lothrazar.dimstack.transit.TransitManager;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 public class DimstackConfig {
 
   private static final ForgeConfigSpec.Builder CFG = new ForgeConfigSpec.Builder();
-  private static ForgeConfigSpec COMMON_CONFIG;
   private static final String WALL = "####################################################################################";
 
   public static void setup(Path path) {
@@ -22,13 +23,15 @@ public class DimstackConfig {
         .build();
     configData.load();
     COMMON_CONFIG.setConfig(configData);
-    TransitManager.reload();
   }
 
+  private static ForgeConfigSpec COMMON_CONFIG;
   public static Map<String, Integer> DIMPORTALCOLORS = new HashMap<>();
   public static Map<String, Integer> DIMKEYCOLORS = new HashMap<>();
   private static String[] ABSOLUTETRANSITS;
   private static String[] RELATIVETRANSITS;
+  private static ConfigValue<List<? extends String>> REL;
+  private static ConfigValue<List<? extends String>> ABS;
   static {
     buildDefaults();
     initConfig();
@@ -39,7 +42,7 @@ public class DimstackConfig {
         //from,to,<,limit,x,y,z   
         "minecraft:overworld,minecraft:the_end,>,200,0,20,0" };
     RELATIVETRANSITS = new String[] {
-        //from,to,<,limit,ratioFLT,landing
+        //from,to,<,limit,ratio,landing
         //from overworld down to nether 
         "minecraft:overworld,minecraft:the_nether,<,8,0.125,120",
         //from nether up to overworld 
@@ -89,11 +92,37 @@ public class DimstackConfig {
   }
 
   private static void initConfig() {
-    CFG.comment(WALL, "Features with configurable properties are split into categories", WALL).push(DimstackMod.MODID);
+    CFG.comment(WALL, "All dimensional rifts are defined here. \r\n"
+        + "Each rift entry is a CSV string with very precise strict values, bad data will crash the game\r\n"
+        + "If you get a crash, read the logs, backup/delete the config and try again\r\n"
+        + "Read the comments, all values are documented ", WALL).push(DimstackMod.MODID);
+    //
+    //
+    //
     CFG.comment(WALL, "Transit conduits", WALL)
         .push("transit");
     //
-    //
+    REL = CFG.comment("\r\nRelative rifts, link similar locations in dimensions. format must be EXACT\r\n"
+        + " Also important: Rifts are only one way.  So you almost always want TWO entries in this list, for example linking nether and overworld has two rifts\r\n"
+        + " Example: The default config says from the overworld, to the nether, go DOWN below limit 8 and use the key, then you have a landing of 120 y value\r\n"
+        + "         from,to,<,limit,ratio,landing\r\n"
+        + " from is the dimension id where you use the key to create the portal\r\n"
+        + " to is the dimension id you end up on the other side of the rift\r\n"
+        + " < means rift is at the bottom of the dimension below limit, > means rift is at the TOP of the dimension above limit\r\n"
+        + " limit is the y value that must be reached to find the rift. example if you have '<30' then y smaller than 30 means rift can be activated\r\n"
+        + " ratio explains how the nether is an 8:1 coords size difference, most dimensions are just 1 here\r\n"
+        + " landing is where the other end of the portal takes you, normally if limit is small, then landing is large to end up at the top of the target dimension\r\n"
+        + "").defineList("relative", Arrays.asList(RELATIVETRANSITS),
+            it -> it instanceof String);
+    ABS = CFG.comment("\r\nAbsolute rifts.  Like how going to the end always puts you on the center island\r\n"
+        + "         from,to,<,limit,x,y,z  \r\n"
+        + " from is the dimension id where you use the key to create the portal\r\n"
+        + " to is the dimension id you end up on the other side of the rift\r\n"
+        + " < means rift is at the bottom of the dimension below limit, > means rift is at the TOP of the dimension above limit\r\n"
+        + " limit is the y value that must be reached to find the rift. example if you have '<30' then y smaller than 30 means rift can be activated\r\n"
+        + " Now just put the x,y,z values where the rift takes you in the to dimension\r\n"
+        + "").defineList("absolute", Arrays.asList(ABSOLUTETRANSITS),
+            it -> it instanceof String);
     //
     //
     CFG.pop(); //transit
@@ -102,10 +131,10 @@ public class DimstackConfig {
   }
 
   public static String[] getRelativeTransits() {
-    return RELATIVETRANSITS;
+    return REL.get().toArray(new String[0]);
   }
 
   public static String[] getAbsoluteTransits() {
-    return ABSOLUTETRANSITS;
+    return ABS.get().toArray(new String[0]);
   }
 }
