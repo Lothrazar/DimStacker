@@ -14,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 public class TransitManager {
@@ -99,11 +100,11 @@ public class TransitManager {
 
   private static void buildTooltip(Transit t) {
     List<ITextComponent> strings = new ArrayList<>();
-    //    strings.add(new TranslationTextComponent("dimstack.riftkey"));
+    strings.add(new StringTextComponent(t.from.toString()));
     strings.add(new StringTextComponent(t.from + " => " + t.to));
-    //    String tt = "dimstack.riftkey." + (t.goesUpwards ? "up" : "down");
-    //    strings.add(new TranslationTextComponent(tt));
-    //
+    String tt = "dimstack.riftkey." + (t.goesUpwards ? "up" : "down");
+    strings.add(new TranslationTextComponent(tt));
+    strings.add(new StringTextComponent(t.to.toString()));
     TIPS.put(t.itemId, strings);
   }
 

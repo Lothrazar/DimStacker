@@ -1,10 +1,9 @@
-package com.lothrazar.dimstack;
+package com.lothrazar.dimstack.util;
 
 import com.lothrazar.dimstack.block.PortalTile;
 import com.lothrazar.dimstack.transit.Transit;
 import com.lothrazar.dimstack.transit.TransitManager;
 import com.lothrazar.dimstack.transit.TransitUtil;
-import com.lothrazar.dimstack.util.DimstackRegistry;
 import java.util.List;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
