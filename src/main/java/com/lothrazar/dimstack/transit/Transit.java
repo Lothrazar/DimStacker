@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
  */
 public class Transit {
 
+  protected ResourceLocation itemId;
   protected ResourceLocation from;
   protected ResourceLocation to;
   protected boolean goesUpwards;
@@ -21,7 +22,8 @@ public class Transit {
   protected float ratio;
   protected int landing;
 
-  public Transit(ResourceLocation from, ResourceLocation to, boolean top, int yLimit, BlockPos pos, boolean relative, float ratio, int landing) {
+  public Transit(ResourceLocation itemId, ResourceLocation from, ResourceLocation to, boolean top, int yLimit, BlockPos pos, boolean relative, float ratio, int landing) {
+    this.itemId = itemId;
     this.from = from;
     this.to = to;
     this.goesUpwards = top;
@@ -32,13 +34,16 @@ public class Transit {
     this.landing = landing;
   }
 
-  public Transit() {}
-
   public Transit(CompoundNBT tag) {
     read(tag);
   }
 
+  public Transit() {}
+
   public void read(CompoundNBT tag) {
+    if (tag.contains("item")) {
+      itemId = ResourceLocation.tryCreate(tag.getString("item"));
+    }
     from = ResourceLocation.tryCreate(tag.getString("from"));
     to = ResourceLocation.tryCreate(tag.getString("to"));
     goesUpwards = tag.getBoolean("up");
@@ -52,6 +57,9 @@ public class Transit {
 
   public CompoundNBT write() {
     CompoundNBT tag = new CompoundNBT();
+    if (itemId != null) {
+      tag.putString("item", itemId.toString());
+    }
     tag.putString("from", from.toString());
     tag.putString("to", to.toString());
     tag.putBoolean("up", goesUpwards);
@@ -61,7 +69,6 @@ public class Transit {
     if (pos != null) {
       tag.put("pos", NBTUtil.writeBlockPos(pos));
     }
-    //
     return tag;
   }
 
@@ -132,22 +139,23 @@ public class Transit {
     String[] lrs = layer.split(",");
     Transit.Builder builder = Transit.builder();
     try {
-      builder.from(ResourceLocation.tryCreate(lrs[0]));
-      builder.to(ResourceLocation.tryCreate(lrs[1]));
-      builder.goesUpwards(">".equalsIgnoreCase(lrs[2]));
-      builder.limit(Integer.parseInt(lrs[3]));
+      builder.item(ResourceLocation.tryCreate(lrs[0]));
+      builder.from(ResourceLocation.tryCreate(lrs[1]));
+      builder.to(ResourceLocation.tryCreate(lrs[2]));
+      builder.goesUpwards(">".equalsIgnoreCase(lrs[3]));
+      builder.limit(Integer.parseInt(lrs[4]));
       if (!relative) {
-        int x = Integer.parseInt(lrs[4]), y = Integer.parseInt(lrs[5]), z = Integer.parseInt(lrs[6]);
+        int x = Integer.parseInt(lrs[5]), y = Integer.parseInt(lrs[6]), z = Integer.parseInt(lrs[7]);
         builder.pos(new BlockPos(x, y, z));
       }
       else {
-        builder.ratio(Float.parseFloat(lrs[4]));
-        builder.landing(Integer.parseInt(lrs[5]));
+        builder.ratio(Float.parseFloat(lrs[5]));
+        builder.landing(Integer.parseInt(lrs[6]));
       }
       return builder.build();
     }
     catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-      DimstackMod.LOGGER.error("layer problem " + layer + " || " + builder.build(), e);
+      DimstackMod.LOGGER.error("Rift problem " + layer + " || " + builder.build(), e);
       return null;
     }
   }
@@ -160,6 +168,7 @@ public class Transit {
 
   public static class Builder {
 
+    protected ResourceLocation itemId;
     protected ResourceLocation from;
     protected ResourceLocation to;
     protected boolean goesUpwards;
@@ -170,6 +179,11 @@ public class Transit {
     protected int landing;
 
     public Builder() {}
+
+    public Builder item(ResourceLocation dim) {
+      this.itemId = dim;
+      return this;
+    }
 
     public Builder from(ResourceLocation dim) {
       this.from = dim;
@@ -209,7 +223,7 @@ public class Transit {
     }
 
     public Transit build() {
-      return new Transit(from, to, goesUpwards, yLimit, pos, relative, ratio, landing);
+      return new Transit(itemId, from, to, goesUpwards, yLimit, pos, relative, ratio, landing);
     }
   }
 }

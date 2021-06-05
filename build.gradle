@@ -117,9 +117,10 @@ dependencies {
  //   compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
  //   runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
-  //  implementation fg.deobf("curse.maven:the-twilight-forest-227639:3325198")
-  //  implementation fg.deobf("curse.maven:aroma1997s-dimensional-world-60092:2672438")
-  
+    implementation fg.deobf("curse.maven:the-twilight-forest-227639:3325198")
+    implementation fg.deobf("curse.maven:the-undergarden-379849:3334271")
+    implementation fg.deobf("curse.maven:the-lost-cities-269024:3312283")
+    implementation fg.deobf("curse.maven:gaia-dimension-302529:3317421")
   
   //  implementation fg.deobf("curse.maven:cyclic-239286:3249448") 
   //  implementation fg.deobf("curse.maven:storage-drawers-223852:3180569")  

@@ -1,19 +1,9 @@
 package com.lothrazar.dimstack.item;
 
-import com.lothrazar.dimstack.block.PortalTile;
-import com.lothrazar.dimstack.transit.Transit;
-import com.lothrazar.dimstack.transit.TransitManager;
-import com.lothrazar.dimstack.transit.TransitUtil;
-import com.lothrazar.dimstack.util.DimstackRegistry;
 import java.util.List;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,35 +11,37 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class KeyItem extends Item {
 
+  // only used for colour?
   public final String targetDimension;
 
   public KeyItem(Item.Properties prop, String dim) {
     super(prop.maxStackSize(1));
     targetDimension = dim;
   }
-
-  @Override
-  public ActionResultType onItemUse(ItemUseContext context) {
-    World world = context.getWorld();
-    if (world.isRemote) {
-      return ActionResultType.SUCCESS;
-    }
-    PlayerEntity player = context.getPlayer();
-    BlockPos pos = context.getPos();
-    Hand hand = context.getHand();
-    Transit t = TransitManager.getTargetFor(world, pos, this);
-    if (t != null) {
-      world.setBlockState(pos, DimstackRegistry.PORTAL.get().getDefaultState());
-      PortalTile tile = (PortalTile) world.getTileEntity(pos);
-      tile.setTransit(t);
-      tile.markDirty();
-      player.getCooldownTracker().setCooldown(this, 300);
-      player.getHeldItem(hand).shrink(1); // todo DoesConsume trigger in T
-      TransitUtil.buildStructure(tile);
-      return ActionResultType.SUCCESS;
-    }
-    return ActionResultType.FAIL;
-  }
+  //
+  //  @Override
+  //  public ActionResultType onItemUse(ItemUseContext context) {
+  //    World world = context.getWorld();
+  //    if (world.isRemote) {
+  //      return ActionResultType.SUCCESS;
+  //    }
+  //    PlayerEntity player = context.getPlayer();
+  //    BlockPos pos = context.getPos();
+  //    Hand hand = context.getHand();
+  //    
+  //    Transit t = TransitManager.getTargetFor(world, pos, this);
+  //    if (t != null) {
+  //      world.setBlockState(pos, DimstackRegistry.PORTAL.get().getDefaultState());
+  //      PortalTile tile = (PortalTile) world.getTileEntity(pos);
+  //      tile.setTransit(t);
+  //      tile.markDirty();
+  //      player.getCooldownTracker().setCooldown(this, 300);
+  //      player.getHeldItem(hand).shrink(1); // todo DoesConsume trigger in T
+  //      TransitUtil.buildStructure(tile);
+  //      return ActionResultType.SUCCESS;
+  //    }
+  //    return ActionResultType.FAIL;
+  //  }
 
   @Override
   @OnlyIn(Dist.CLIENT)

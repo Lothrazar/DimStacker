@@ -40,40 +40,40 @@ public class DimstackConfig {
   private static void buildDefaults() {
     ABSOLUTETRANSITS = new String[] {
         //from,to,<,limit,x,y,z   
-        "minecraft:overworld,minecraft:the_end,>,200,0,20,0" };
+        "dimstack:end_key,minecraft:overworld,minecraft:the_end,>,200,0,20,0" };
     RELATIVETRANSITS = new String[] {
         //from,to,<,limit,ratio,landing
         //from overworld down to nether 
-        "minecraft:overworld,minecraft:the_nether,<,8,0.125,120",
+        "dimstack:nether_key,minecraft:overworld,minecraft:the_nether,<,8,0.125,120",
         //from nether up to overworld 
-        "minecraft:the_nether,minecraft:overworld,>,118,8,8",
+        "dimstack:overworld_key,minecraft:the_nether,minecraft:overworld,>,118,8,8",
         //end down to overworld
-        "minecraft:the_end,minecraft:overworld,<,3,1,130",
+        "dimstack:overworld_key,minecraft:the_end,minecraft:overworld,<,3,1,130",
         //from nether down to twilight
-        "minecraft:the_nether,twilightforest:twilightforest,<,8,1,220",
-        //from twilight up to nether 
-        "twilightforest:twilightforest,minecraft:the_nether,>,218,1,8",
+        "dimstack:twilight_key,minecraft:the_nether,twilightforest:twilightforest,<,8,1,220",
+        //from twilight up to ow 
+        "dimstack:overworld_key,twilightforest:twilightforest,minecraft:the_nether,>,218,1,8",
         //
         //same but overworld and twilight to test
         //from nether down to twilight
-        "minecraft:overworld,twilightforest:twilightforest,<,8,1,220",
-        //from twilight up to nether 
-        "twilightforest:twilightforest,minecraft:overworld,>,218,1,8",
+        "dimstack:twilight_key,minecraft:overworld,twilightforest:twilightforest,<,8,1,220",
+        //from twilight up to OW 
+        "dimstack:overworld_key,twilightforest:twilightforest,minecraft:overworld,>,218,1,8",
         //
         //from nether down to u
-        "minecraft:the_nether,undergarden:undergarden,<,8,1,220",
+        "dimstack:undergarden_key,minecraft:the_nether,undergarden:undergarden,<,8,1,220",
         //from u up to nether 
-        "undergarden:undergarden,minecraft:the_nether,>,218,1,8",
+        "dimstack:nether_key,undergarden:undergarden,minecraft:the_nether,>,218,1,8",
         //
         //from nether down to g
-        "minecraft:the_nether,gaiadimension:gaia_dimension,<,8,1,220",
+        "dimstack:gaia_key,minecraft:the_nether,gaiadimension:gaia_dimension,<,8,1,220",
         //from g up to nether 
-        "gaiadimension:gaia_dimension,minecraft:the_nether,>,218,1,8",
+        "dimstack:nether_key,gaiadimension:gaia_dimension,minecraft:the_nether,>,218,1,8",
         //
         //from nether down to lc
-        "minecraft:the_nether,lostcities:lostcity,<,8,1,220",
+        "dimstack:lostcities_key,minecraft:the_nether,lostcities:lostcity,<,8,1,220",
         //from lc up to nether 
-        "lostcities:lostcity,minecraft:the_nether,>,218,1,8"
+        "dimstack:nether_key,lostcities:lostcity,minecraft:the_nether,>,218,1,8"
     };
     DIMKEYCOLORS.put("minecraft:overworld", 0xFF0000);
     DIMKEYCOLORS.put("minecraft:the_nether", 0x00FF00);
@@ -105,7 +105,7 @@ public class DimstackConfig {
     REL = CFG.comment("\r\nRelative rifts, link similar locations in dimensions. format must be EXACT\r\n"
         + " Also important: Rifts are only one way.  So you almost always want TWO entries in this list, for example linking nether and overworld has two rifts\r\n"
         + " Example: The default config says from the overworld, to the nether, go DOWN below limit 8 and use the key, then you have a landing of 120 y value\r\n"
-        + "         from,to,<,limit,ratio,landing\r\n"
+        + "         item,from,to,<,limit,ratio,landing\r\n"
         + " from is the dimension id where you use the key to create the portal\r\n"
         + " to is the dimension id you end up on the other side of the rift\r\n"
         + " < means rift is at the bottom of the dimension below limit, > means rift is at the TOP of the dimension above limit\r\n"
@@ -115,7 +115,7 @@ public class DimstackConfig {
         + "").defineList("relative", Arrays.asList(RELATIVETRANSITS),
             it -> it instanceof String);
     ABS = CFG.comment("\r\nAbsolute rifts.  Like how going to the end always puts you on the center island\r\n"
-        + "         from,to,<,limit,x,y,z  \r\n"
+        + "         item,from,to,<,limit,x,y,z  \r\n"
         + " from is the dimension id where you use the key to create the portal\r\n"
         + " to is the dimension id you end up on the other side of the rift\r\n"
         + " < means rift is at the bottom of the dimension below limit, > means rift is at the TOP of the dimension above limit\r\n"
@@ -123,7 +123,6 @@ public class DimstackConfig {
         + " Now just put the x,y,z values where the rift takes you in the to dimension\r\n"
         + "").defineList("absolute", Arrays.asList(ABSOLUTETRANSITS),
             it -> it instanceof String);
-    //
     //
     CFG.pop(); //transit
     CFG.pop(); //ROOT

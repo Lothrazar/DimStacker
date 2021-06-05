@@ -2,6 +2,7 @@ package com.lothrazar.dimstack;
 
 import com.lothrazar.dimstack.transit.TransitManager;
 import com.lothrazar.dimstack.util.DimstackRegistry;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -33,6 +34,7 @@ public class DimstackMod {
     DimstackRegistry.TILE_ENTITIES.register(eventBus);
     DimstackConfig.setup(FMLPaths.CONFIGDIR.get().resolve(MODID + ".toml"));
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+    MinecraftForge.EVENT_BUS.register(new ItemUseHandler());
   }
 
   private void setup(final FMLCommonSetupEvent event) {
