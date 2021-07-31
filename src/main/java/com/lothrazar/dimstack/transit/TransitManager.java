@@ -8,15 +8,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 public class TransitManager {
 
@@ -25,7 +25,7 @@ public class TransitManager {
   /**
    * Gets the transmit handler for a given location.
    */
-  public static Transit getTargetFor(World world, BlockPos pos, Item key) {
+  public static Transit getTargetFor(Level world, BlockPos pos, Item key) {
     for (Transit t : TRANSITS) {
       int playerY = pos.getY();
       String id = UtilWorld.dimensionToString(world);
@@ -53,11 +53,11 @@ public class TransitManager {
    */
   public static Transit getTargetFor(PortalTile tile) {
     if (tile.getTransit() == null) {
-      DimstackMod.LOGGER.error("Error: tile with null transit " + tile.getPos());
+      DimstackMod.LOGGER.error("Error: tile with null transit " + tile.getBlockPos());
       return null;
     }
     for (Transit t : TRANSITS) {
-      String id = UtilWorld.dimensionToString(tile.getWorld());
+      String id = UtilWorld.dimensionToString(tile.getLevel());
       // also tranit and tile must target the same place
       ResourceLocation loopTargetDim = t.getTargetDim();
       ResourceLocation tileTargetDim = tile.getTransit().getTargetDim();
@@ -97,25 +97,25 @@ public class TransitManager {
     }
   }
 
-  static Map<ResourceLocation, List<ITextComponent>> TIPS = new HashMap<>();
+  static Map<ResourceLocation, List<Component>> TIPS = new HashMap<>();
 
   private static void buildTooltip(Transit t) {
-    List<ITextComponent> strings = new ArrayList<>();
+    List<Component> strings = new ArrayList<>();
     if (t.goesUpwards) {
       // goes up so from is below
-      strings.add(new StringTextComponent(t.to.toString()).mergeStyle(TextFormatting.LIGHT_PURPLE));
-      strings.add(new TranslationTextComponent("dimstack.riftkey." + (t.goesUpwards ? "up" : "down")).mergeStyle(TextFormatting.GRAY));
-      strings.add(new StringTextComponent(t.from.toString()).mergeStyle(TextFormatting.DARK_PURPLE));
+      strings.add(new TextComponent(t.to.toString()).withStyle(ChatFormatting.LIGHT_PURPLE));
+      strings.add(new TranslatableComponent("dimstack.riftkey." + (t.goesUpwards ? "up" : "down")).withStyle(ChatFormatting.GRAY));
+      strings.add(new TextComponent(t.from.toString()).withStyle(ChatFormatting.DARK_PURPLE));
     }
     else { // down
-      strings.add(new StringTextComponent(t.from.toString()).mergeStyle(TextFormatting.DARK_PURPLE));
-      strings.add(new TranslationTextComponent("dimstack.riftkey." + (t.goesUpwards ? "up" : "down")).mergeStyle(TextFormatting.GRAY));
-      strings.add(new StringTextComponent(t.to.toString()).mergeStyle(TextFormatting.LIGHT_PURPLE));
+      strings.add(new TextComponent(t.from.toString()).withStyle(ChatFormatting.DARK_PURPLE));
+      strings.add(new TranslatableComponent("dimstack.riftkey." + (t.goesUpwards ? "up" : "down")).withStyle(ChatFormatting.GRAY));
+      strings.add(new TextComponent(t.to.toString()).withStyle(ChatFormatting.LIGHT_PURPLE));
     }
     TIPS.put(t.itemId, strings);
   }
 
-  public static List<ITextComponent> getTooltip(ItemStack itemStack) {
+  public static List<Component> getTooltip(ItemStack itemStack) {
     ResourceLocation id = itemStack.getItem().getRegistryName();
     if (TIPS.containsKey(id)) {
       return TIPS.get(id);

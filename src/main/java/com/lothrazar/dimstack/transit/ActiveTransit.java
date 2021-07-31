@@ -6,45 +6,45 @@ import com.lothrazar.dimstack.util.DimstackRegistry;
 import com.lothrazar.dimstack.util.TransitUtil;
 import com.lothrazar.dimstack.util.UtilWorld;
 import java.util.function.Function;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.PortalInfo;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.portal.PortalInfo;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.ITeleporter;
 
 public class ActiveTransit implements ITeleporter {
 
-  protected ServerWorld world;
+  protected ServerLevel world;
   protected PortalTile source;
   protected Transit transit;
   protected BlockPos portalPos;
   protected BlockPos target;
 
-  public ActiveTransit(ServerWorld world, PortalTile source, Transit transit) {
+  public ActiveTransit(ServerLevel world, PortalTile source, Transit transit) {
     this.world = world;
     this.source = source;
     this.transit = transit;
   }
 
   @Override
-  public PortalInfo getPortalInfo(Entity entity, ServerWorld destWorld, Function<ServerWorld, PortalInfo> defaultPortalInfo) {
+  public PortalInfo getPortalInfo(Entity entity, ServerLevel destWorld, Function<ServerLevel, PortalInfo> defaultPortalInfo) {
     //  PortalInfo pos;
     //player.setPosition(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D);
     //
-    return new PortalInfo(new Vector3d(target.getX(), target.getY(), target.getZ()),
-        Vector3d.ZERO, entity.rotationYaw, entity.rotationPitch);
+    return new PortalInfo(new Vec3(target.getX(), target.getY(), target.getZ()),
+        Vec3.ZERO, entity.getYRot(), entity.getXRot());
   }
 
-  public void teleport(PlayerEntity player) {
+  public void teleport(Player player) {
     if (transit.isRelative()) {
       portalPos = createOrFindPortal();
       DimstackMod.LOGGER.info(portalPos + " found from relative transit" + transit);
@@ -52,16 +52,16 @@ public class ActiveTransit implements ITeleporter {
         return;
       }
       if (source.goesUpwards()) {
-        target = portalPos.add(1, 1, 1);
+        target = portalPos.offset(1, 1, 1);
         teleportInternal(player);
       }
       else {
-        target = portalPos.down(3);
+        target = portalPos.below(3);
         teleportInternal(player);
       }
-      TranslationTextComponent to = new TranslationTextComponent(DimstackMod.MODID + "." + transit.getTargetDim().getPath());
-      player.sendMessage(new TranslationTextComponent("dimstack.teleport.info", to), player.getUniqueID());
-      player.sendMessage(new TranslationTextComponent(world.getProviderName()), player.getUniqueID());
+      TranslatableComponent to = new TranslatableComponent(DimstackMod.MODID + "." + transit.getTargetDim().getPath());
+      player.sendMessage(new TranslatableComponent("dimstack.teleport.info", to), player.getUUID());
+      player.sendMessage(new TranslatableComponent(world.gatherChunkSourceStats()), player.getUUID());
     }
     else {
       portalPos = transit.getTargetPos();
@@ -70,35 +70,35 @@ public class ActiveTransit implements ITeleporter {
       }
       for (int x = -1; x <= 1; x++) {
         for (int z = -1; z <= 1; z++) {
-          world.setBlockState(portalPos.add(x, 0, z), Blocks.STONE_BRICKS.getDefaultState(), 2);
+          world.setBlock(portalPos.offset(x, 0, z), Blocks.STONE_BRICKS.defaultBlockState(), 2);
         }
       }
       for (int x = -1; x <= 1; x++) {
         for (int z = -1; z <= 1; z++) {
           for (int y = 1; y < 4; y++) {
-            world.setBlockState(portalPos.add(x, y, z), Blocks.AIR.getDefaultState(), 2);
+            world.setBlock(portalPos.offset(x, y, z), Blocks.AIR.defaultBlockState(), 2);
           }
         }
       }
-      TranslationTextComponent to = new TranslationTextComponent(DimstackMod.MODID + "." + transit.getTargetDim().getPath());
-      player.sendMessage(new TranslationTextComponent("dimstack.teleport.info", to), player.getUniqueID());
-      target = portalPos.up();
+      TranslatableComponent to = new TranslatableComponent(DimstackMod.MODID + "." + transit.getTargetDim().getPath());
+      player.sendMessage(new TranslatableComponent("dimstack.teleport.info", to), player.getUUID());
+      target = portalPos.above();
       teleportInternal(player);
     }
   }
 
-  private void teleportInternal(PlayerEntity player) {
+  private void teleportInternal(Player player) {
     if (!player.isCreative()) {
-      player.addPotionEffect(new EffectInstance(Effects.RESISTANCE, 200, 200, false, false));
+      player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 200, false, false));
     }
     if (this.world != null && this.world.getServer() != null) {
       //needs to use DimensionType now
-      ServerWorld dim = world.getServer().getWorld(UtilWorld.stringToDimension(transit.getTargetDim()));
+      ServerLevel dim = world.getServer().getLevel(UtilWorld.stringToDimension(transit.getTargetDim()));
       //      DimensionType dim = DimensionType.getById(transit.getTargetDim());
       //      player.changeDimension(server, teleporter)
       player.changeDimension(dim, this);
-      this.world.playSound(null, target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.MASTER, 0.25F,
-          this.world.rand.nextFloat() * 0.4F + 0.8F);
+      this.world.playSound(null, target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D, SoundEvents.PORTAL_TRAVEL, SoundSource.MASTER, 0.25F,
+          this.world.random.nextFloat() * 0.4F + 0.8F);
     }
     else {
       throw new IllegalArgumentException("Dimension: " + transit.getTargetDim() + " doesn't exist.");
@@ -106,7 +106,7 @@ public class ActiveTransit implements ITeleporter {
   }
 
   @Override
-  public Entity placeEntity(Entity newEntity, ServerWorld currentWorld, ServerWorld destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
+  public Entity placeEntity(Entity newEntity, ServerLevel currentWorld, ServerLevel destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
     newEntity.fallDistance = 0;
     //
     //    newEntity.setPosition(target.getX() + 0.5D, target.getY() + 0.5D, target.getZ() + 0.5D);
@@ -126,7 +126,7 @@ public class ActiveTransit implements ITeleporter {
     }
     BlockPos destination;
     if (source.getTarget().equals(PortalTile.UNLINKED)) {
-      BlockPos src = source.getPos();
+      BlockPos src = source.getBlockPos();
       int x = (int) (src.getX() * transit.getRatio());
       int y = transit.getLanding();
       int z = (int) (src.getZ() * transit.getRatio());
@@ -134,7 +134,7 @@ public class ActiveTransit implements ITeleporter {
       DimstackMod.LOGGER.info("portal starting at " + dest);
       if (source.goesUpwards()) { //We just went up, so search upwards.
         while (true) {
-          dest = dest.up(); // dest.setPos(x, y + 1, z)
+          dest = dest.above(); // dest.setPos(x, y + 1, z)
           if (y >= 255 || world.getBlockState(dest).getBlock() != Blocks.BEDROCK) {
             break;
           }
@@ -148,27 +148,27 @@ public class ActiveTransit implements ITeleporter {
           if (y <= 0 || state.getBlock() != Blocks.AIR && state.getBlock() != Blocks.BEDROCK) {
             break;
           }
-          dest = dest.down(); // dest.setPos(x, --y, z)
+          dest = dest.below(); // dest.setPos(x, --y, z)
           state = world.getBlockState(dest);
           y--;
         }
       }
-      destination = dest.toImmutable();
+      destination = dest.immutable();
     }
     else {
       destination = source.getTarget();
     }
     BlockState dest = world.getBlockState(destination);
     if (dest.getBlock() != DimstackRegistry.PORTAL.get()) {
-      world.setBlockState(destination, DimstackRegistry.PORTAL.get().getDefaultState(), 2);
-      PortalTile tile = (PortalTile) world.getTileEntity(destination);
+      world.setBlock(destination, DimstackRegistry.PORTAL.get().defaultBlockState(), 2);
+      PortalTile tile = (PortalTile) world.getBlockEntity(destination);
       Transit opposite = new Transit();
       opposite.from = transit.to;
       opposite.to = transit.from;
       opposite.goesUpwards = !source.goesUpwards(); //!transit.goesUpwards; 
       tile.setTransit(opposite);
-      tile.setTarget(source.getPos());
-      source.setTarget(tile.getPos());
+      tile.setTarget(source.getBlockPos());
+      source.setTarget(tile.getBlockPos());
       TransitUtil.buildStructure(tile);
     }
     return destination;

@@ -6,54 +6,54 @@ import com.lothrazar.dimstack.transit.Transit;
 import com.lothrazar.dimstack.transit.TransitManager;
 import com.lothrazar.dimstack.util.DimstackRegistry;
 import com.lothrazar.dimstack.util.UtilWorld;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
-public class PortalBlock extends Block {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-  public static final VoxelShape PORTAL_AABB = Block.makeCuboidShape(0, 0.4, 0, 1, 0.6, 1);
+public class PortalBlock extends BaseEntityBlock {
+
+  public static final VoxelShape PORTAL_AABB = Block.box(0, 0.4, 0, 1, 0.6, 1);
 
   public PortalBlock(Properties properties) {
-    super(properties.hardnessAndResistance(-1).setLightLevel(state -> 15));
+    super(properties.strength(-1).lightLevel(state -> 15));
   }
 
   @Override
-  public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+  public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
     return PORTAL_AABB;
   }
-  //  @Override
-  //  public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-  //    return PORTAL_AABB;
-  //  }
 
   @Override
-  public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-    if (entity instanceof PlayerEntity && entity.isAlive()) {
-      if (!world.isRemote && !entity.isOnePlayerRiding() && !entity.isBeingRidden() && entity.isNonBoss()) {
-        PlayerEntity playerMP = (PlayerEntity) entity;
-        if (playerMP.getCooldownTracker().hasCooldown(DimstackRegistry.PORTAL_I.get())) {
+  public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+    if (entity instanceof Player && entity.isAlive()) {
+      if (!world.isClientSide && !entity.hasExactlyOnePlayerPassenger() && !entity.isVehicle() && entity.canChangeDimensions()) {
+        Player playerMP = (Player) entity;
+        if (playerMP.getCooldowns().isOnCooldown(DimstackRegistry.PORTAL_I.get())) {
           return;
         }
-        PortalTile tile = (PortalTile) world.getTileEntity(pos);
+        PortalTile tile = (PortalTile) world.getBlockEntity(pos);
         Transit t = TransitManager.getTargetFor(tile);
         if (t == null || tile == null) {
           return;
         }
         //        playerMP.getServer().getw
-        ServerWorld targetDim = playerMP.getServer().getWorld(UtilWorld.stringToDimension(t.getTargetDim()));
+        ServerLevel targetDim = playerMP.getServer().getLevel(UtilWorld.stringToDimension(t.getTargetDim()));
         try {
           ActiveTransit teleporter = new ActiveTransit(targetDim, tile, t);
           teleporter.teleport(playerMP);
-          playerMP.getCooldownTracker().setCooldown(DimstackRegistry.PORTAL_I.get(), 20);
+          playerMP.getCooldowns().addCooldown(DimstackRegistry.PORTAL_I.get(), 20);
         }
         catch (Exception e) {
           DimstackMod.LOGGER.error("There has been an exception during an attempted teleportation.", e);
@@ -63,17 +63,17 @@ public class PortalBlock extends Block {
   }
 
   @Override
-  public boolean hasTileEntity(BlockState state) {
-    return true;
+  public RenderShape getRenderShape(BlockState bs) {
+    return RenderShape.MODEL;
   }
 
   @Override
-  public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-    return new PortalTile();
+  public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    return new PortalTile(pos, state);
   }
 
   @Override
-  public int getOpacity(BlockState state, IBlockReader worldIn, BlockPos pos) {
+  public int getLightBlock(BlockState state, BlockGetter worldIn, BlockPos pos) {
     return 0;
   }
 }

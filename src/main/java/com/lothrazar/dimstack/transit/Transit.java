@@ -2,10 +2,10 @@ package com.lothrazar.dimstack.transit;
 
 import com.lothrazar.dimstack.DimstackMod;
 import javax.annotation.Nullable;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
 
 /**
  * A transit object. A transit represents a connection between vertical dimensions.
@@ -34,29 +34,29 @@ public class Transit {
     this.landing = landing;
   }
 
-  public Transit(CompoundNBT tag) {
+  public Transit(CompoundTag tag) {
     read(tag);
   }
 
   public Transit() {}
 
-  public void read(CompoundNBT tag) {
+  public void read(CompoundTag tag) {
     if (tag.contains("item")) {
-      itemId = ResourceLocation.tryCreate(tag.getString("item"));
+      itemId = ResourceLocation.tryParse(tag.getString("item"));
     }
-    from = ResourceLocation.tryCreate(tag.getString("from"));
-    to = ResourceLocation.tryCreate(tag.getString("to"));
+    from = ResourceLocation.tryParse(tag.getString("from"));
+    to = ResourceLocation.tryParse(tag.getString("to"));
     goesUpwards = tag.getBoolean("up");
     yLimit = tag.getInt("ylimit");
     landing = tag.getInt("landing");
     ratio = tag.getFloat("ratio");
     if (tag.contains("pos")) {
-      pos = NBTUtil.readBlockPos(tag.getCompound("pos"));
+      pos = NbtUtils.readBlockPos(tag.getCompound("pos"));
     }
   }
 
-  public CompoundNBT write() {
-    CompoundNBT tag = new CompoundNBT();
+  public CompoundTag write() {
+    CompoundTag tag = new CompoundTag();
     if (itemId != null) {
       tag.putString("item", itemId.toString());
     }
@@ -67,7 +67,7 @@ public class Transit {
     tag.putInt("landing", landing);
     tag.putFloat("ratio", ratio);
     if (pos != null) {
-      tag.put("pos", NBTUtil.writeBlockPos(pos));
+      tag.put("pos", NbtUtils.writeBlockPos(pos));
     }
     return tag;
   }
@@ -139,9 +139,9 @@ public class Transit {
     String[] lrs = layer.split(",");
     Transit.Builder builder = Transit.builder();
     try {
-      builder.item(ResourceLocation.tryCreate(lrs[0]));
-      builder.from(ResourceLocation.tryCreate(lrs[1]));
-      builder.to(ResourceLocation.tryCreate(lrs[2]));
+      builder.item(ResourceLocation.tryParse(lrs[0]));
+      builder.from(ResourceLocation.tryParse(lrs[1]));
+      builder.to(ResourceLocation.tryParse(lrs[2]));
       builder.goesUpwards(">".equalsIgnoreCase(lrs[3]));
       builder.limit(Integer.parseInt(lrs[4]));
       if (!relative) {

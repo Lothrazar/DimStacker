@@ -1,6 +1,6 @@
 package com.lothrazar.dimstack.item;
 
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 public class KeyItem extends Item {
 
@@ -8,7 +8,7 @@ public class KeyItem extends Item {
   public final String targetDimension;
 
   public KeyItem(Item.Properties prop, String dim) {
-    super(prop.maxStackSize(1));
+    super(prop.stacksTo(1));
     targetDimension = dim;
   }
 }

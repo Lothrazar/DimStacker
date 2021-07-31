@@ -5,7 +5,7 @@ import com.lothrazar.dimstack.util.DimstackRegistry;
 import com.lothrazar.dimstack.util.UtilWorld;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,7 +36,7 @@ public class ClientColourRegistry {
         DimstackRegistry.UNDERGARDEN_KEY.get(), DimstackRegistry.TWILIGHT_KEY.get());
     e.getItemColors().register((stack, tintIndex) -> {
       if (tintIndex == 0) {
-        String dim = UtilWorld.dimensionToString(Minecraft.getInstance().world);
+        String dim = UtilWorld.dimensionToString(Minecraft.getInstance().level);
         if (DimstackConfig.DIMPORTALCOLORS.containsKey(dim)) {
           return DimstackConfig.DIMPORTALCOLORS.get(dim);
         }
@@ -50,10 +50,10 @@ public class ClientColourRegistry {
 
   @SubscribeEvent
   public static void colors(ColorHandlerEvent.Block e) {
-    RenderTypeLookup.setRenderLayer(DimstackRegistry.PORTAL.get().getBlock(), RenderType.getTranslucent());
+    ItemBlockRenderTypes.setRenderLayer(DimstackRegistry.PORTAL.get(), RenderType.translucent());
     e.getBlockColors().register((state, reader, pos, tintIndex) -> {
       if (tintIndex == 0) {
-        String dim = UtilWorld.dimensionToString(Minecraft.getInstance().world);
+        String dim = UtilWorld.dimensionToString(Minecraft.getInstance().level);
         if (DimstackConfig.DIMPORTALCOLORS.containsKey(dim)) {
           return DimstackConfig.DIMPORTALCOLORS.get(dim);
         }
