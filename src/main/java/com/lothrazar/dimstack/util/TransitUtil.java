@@ -1,17 +1,16 @@
 package com.lothrazar.dimstack.util;
 
 import com.lothrazar.dimstack.block.PortalTile;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 
 public class TransitUtil {
 
   /**
    * Creates the stone brick and glowstone structure that houses a portal.
-   * 
-   * @param tile
-   *          The tile to generate this structure for.
+   *
+   * @param tile The tile to generate this structure for.
    */
   public static void buildStructure(PortalTile tile) {
     Level world = tile.getLevel();

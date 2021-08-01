@@ -4,8 +4,8 @@ import com.lothrazar.dimstack.item.KeyItem;
 import com.lothrazar.dimstack.util.DimstackRegistry;
 import com.lothrazar.dimstack.util.UtilWorld;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,17 +17,17 @@ public class ClientColourRegistry {
   @SubscribeEvent
   public static void colors(ColorHandlerEvent.Item e) {
     e.getItemColors().register((stack, tintIndex) -> {
-      if (tintIndex == 0 && stack.getItem() instanceof KeyItem) {
-        KeyItem key = (KeyItem) stack.getItem();
-        if (DimstackConfig.DIMKEYCOLORS.containsKey(key.targetDimension)) {
-          return DimstackConfig.DIMKEYCOLORS.get(key.targetDimension);
-        }
-        else {
-          DimstackMod.LOGGER.error("key color missing : " + key.targetDimension);
-        }
-      }
-      return -1;
-    }, DimstackRegistry.OVERWORLD_KEY.get(),
+          if (tintIndex == 0 && stack.getItem() instanceof KeyItem) {
+            KeyItem key = (KeyItem) stack.getItem();
+            if (DimstackConfig.DIMKEYCOLORS.containsKey(key.targetDimension)) {
+              return DimstackConfig.DIMKEYCOLORS.get(key.targetDimension);
+            }
+            else {
+              DimstackMod.LOGGER.error("key color missing : " + key.targetDimension);
+            }
+          }
+          return -1;
+        }, DimstackRegistry.OVERWORLD_KEY.get(),
         DimstackRegistry.END_KEY.get(),
         DimstackRegistry.NETHER_KEY.get(),
         //modded keys

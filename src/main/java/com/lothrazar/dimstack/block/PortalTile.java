@@ -2,10 +2,10 @@ package com.lothrazar.dimstack.block;
 
 import com.lothrazar.dimstack.transit.Transit;
 import com.lothrazar.dimstack.util.DimstackRegistry;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class PortalTile extends BlockEntity {
 

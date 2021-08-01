@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class TransitManager {
@@ -35,7 +35,7 @@ public class TransitManager {
       //      DimstackMod.LOGGER.info("test " + key.targetDimension
       //          + "TARGET " + t.getTargetDim().toString().equalsIgnoreCase(key.targetDimension));
       if (t.getSourceDim().toString().equalsIgnoreCase(id) &&
-      // t.getTargetDim().toString().equalsIgnoreCase(key.targetDimension)
+          // t.getTargetDim().toString().equalsIgnoreCase(key.targetDimension)
           t.itemId.toString().equalsIgnoreCase(key.getRegistryName().toString())) {
         if (t.goesUpwards() && playerY > t.yLimit) {
           return t;
@@ -117,9 +117,10 @@ public class TransitManager {
 
   public static List<Component> getTooltip(ItemStack itemStack) {
     ResourceLocation id = itemStack.getItem().getRegistryName();
+    List<Component> tts = new ArrayList<>();
     if (TIPS.containsKey(id)) {
-      return TIPS.get(id);
+      tts.addAll(TIPS.get(id));
     }
-    return null;
+    return tts;
   }
 }

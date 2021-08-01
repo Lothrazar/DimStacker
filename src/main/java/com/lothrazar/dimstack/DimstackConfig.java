@@ -32,6 +32,7 @@ public class DimstackConfig {
   private static String[] RELATIVETRANSITS;
   private static ConfigValue<List<? extends String>> REL;
   private static ConfigValue<List<? extends String>> ABS;
+
   static {
     buildDefaults();
     initConfig();
@@ -113,7 +114,7 @@ public class DimstackConfig {
         + " ratio explains how the nether is an 8:1 coords size difference, most dimensions are just 1 here\r\n"
         + " landing is where the other end of the portal takes you, normally if limit is small, then landing is large to end up at the top of the target dimension\r\n"
         + "").defineList("relative", Arrays.asList(RELATIVETRANSITS),
-            it -> it instanceof String);
+        it -> it instanceof String);
     ABS = CFG.comment("\r\nAbsolute rifts.  Like how going to the end always puts you on the center island\r\n"
         + "         item,from,to,<,limit,x,y,z  \r\n"
         + " from is the dimension id where you use the key to create the portal\r\n"
@@ -122,7 +123,7 @@ public class DimstackConfig {
         + " limit is the y value that must be reached to find the rift. example if you have '<30' then y smaller than 30 means rift can be activated\r\n"
         + " Now just put the x,y,z values where the rift takes you in the to dimension\r\n"
         + "").defineList("absolute", Arrays.asList(ABSOLUTETRANSITS),
-            it -> it instanceof String);
+        it -> it instanceof String);
     //
     CFG.pop(); //transit
     CFG.pop(); //ROOT

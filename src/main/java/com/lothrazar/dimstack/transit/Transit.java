@@ -2,10 +2,10 @@ package com.lothrazar.dimstack.transit;
 
 import com.lothrazar.dimstack.DimstackMod;
 import javax.annotation.Nullable;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
 
 /**
  * A transit object. A transit represents a connection between vertical dimensions.
@@ -38,7 +38,8 @@ public class Transit {
     read(tag);
   }
 
-  public Transit() {}
+  public Transit() {
+  }
 
   public void read(CompoundTag tag) {
     if (tag.contains("item")) {
@@ -178,7 +179,8 @@ public class Transit {
     protected float ratio;
     protected int landing;
 
-    public Builder() {}
+    public Builder() {
+    }
 
     public Builder item(ResourceLocation dim) {
       this.itemId = dim;

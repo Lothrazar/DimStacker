@@ -6,7 +6,7 @@
 # against bad commits.
 
 name: build
-on: [pull_request, push]
+on: [ pull_request, push ]
 
 jobs:
   build:
@@ -14,13 +14,13 @@ jobs:
       matrix:
         # Use these Java versions
         java: [
-          1.8
+            1.8
           # ,  # Minimum supported by Minecraft
           # 11,   # Current Java LTS
           # 15    # Latest version
         ]
         # ubuntu-20.04 FAILS to get maven dependencies, even when windows-latest passes perfectly fine. exact same everything
-        os: [windows-latest]
+        os: [ windows-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository

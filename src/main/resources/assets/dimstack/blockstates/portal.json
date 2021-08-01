@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "": { "model": "dimstack:block/portal" }
+  "variants": {
+    "": {
+      "model": "dimstack:block/portal"
     }
+  }
 }

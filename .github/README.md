@@ -1,11 +1,9 @@
-
-
 # Dimensional Stacking Rifts
+
 https://www.curseforge.com/minecraft/mc-mods/dimension-stacking-rifts
 
-[![](http://cf.way2muchnoise.eu/350696.svg)](https://www.curseforge.com/minecraft/mc-mods/dimension-stacking-rifts) 
+[![](http://cf.way2muchnoise.eu/350696.svg)](https://www.curseforge.com/minecraft/mc-mods/dimension-stacking-rifts)
 [![](http://cf.way2muchnoise.eu/versions/350696.svg)](https://www.curseforge.com/minecraft/mc-mods/dimension-stacking-rifts)
-
 
 ![build](https://github.com/Lothrazar/DimStacker/workflows/build/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)

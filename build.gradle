@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-	maven { url = 'https://maven.minecraftforge.net' } 
+        maven { url = 'https://maven.minecraftforge.net' }
         maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
@@ -16,12 +16,11 @@ apply plugin: 'maven-publish'
 apply plugin: 'checkstyle'
 apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
+
 import net.minecraftforge.gradle.common.tasks.SignJar
-import groovy.json.JsonSlurper
-import groovy.json.JsonOutput
 
 version = "${mc_version}-${mod_version}"
-group= "com.lothrazar.dimstack"
+group = "com.lothrazar.dimstack"
 archivesBaseName = "DimStack"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(16)
@@ -31,12 +30,12 @@ checkstyle {
     config project.resources.text.fromUri("https://raw.githubusercontent.com/Lothrazar/Cyclic/trunk/1.16/checkstyle.xml")
 }
 checkstyleMain {
-    source ='src/main/java'
+    source = 'src/main/java'
 }
 
 minecraft {
     mappings channel: 'official', version: '1.17.1'
-	
+
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
@@ -44,11 +43,11 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-            
+
 // some IDE's can get the Program arguments here  --mixin mixins.myplugin.json
             //args "--mixin mixins.myplugin.json"
-		        //property 'mixin', 'mixins.myplugin.json'
-			
+            //property 'mixin', 'mixins.myplugin.json'
+
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
@@ -103,68 +102,68 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
- 
-    // fg.deobf("mezz.jei:${jei_version}")
- //   compile fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
- //   compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
- //   runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
-  //  implementation fg.deobf("curse.maven:the-twilight-forest-227639:3325198")
-  //  implementation fg.deobf("curse.maven:the-undergarden-379849:3334271")
-  //  implementation fg.deobf("curse.maven:the-lost-cities-269024:3312283")
-  //  implementation fg.deobf("curse.maven:gaia-dimension-302529:3317421")
-  
-  //  implementation fg.deobf("curse.maven:cyclic-239286:3249448") 
-  //  implementation fg.deobf("curse.maven:storage-drawers-223852:3180569")  
-    
+    // fg.deobf("mezz.jei:${jei_version}")
+    //   compile fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+    //   compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+    //   runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+
+    //  implementation fg.deobf("curse.maven:the-twilight-forest-227639:3325198")
+    //  implementation fg.deobf("curse.maven:the-undergarden-379849:3334271")
+    //  implementation fg.deobf("curse.maven:the-lost-cities-269024:3312283")
+    //  implementation fg.deobf("curse.maven:gaia-dimension-302529:3317421")
+
+    //  implementation fg.deobf("curse.maven:cyclic-239286:3249448")
+    //  implementation fg.deobf("curse.maven:storage-drawers-223852:3180569")
+
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    
+
 }
 
 repositories {
-  maven {
-    // location of the maven that hosts JEI files
-    name = "Progwml6 maven"
-    url = 'https://dvs1.progwml6.com/files/maven/'
-  }
-  maven {
-    name = "mappings"
-    url = 'https://dogforce-games.com/maven'
-  }
-  maven {
-    // location of a maven mirror for JEI files, as a fallback
-    name = "ModMaven"
-    url = 'https://modmaven.k-4u.nl'
-  }
-  maven {
-  	name = "curios"
-    url = 'https://maven.theillusivec4.top/'
-  }
-  maven { url = 'https://maven.blamejared.com' }    
-  maven { url = 'https://www.cursemaven.com'  }
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = 'https://dvs1.progwml6.com/files/maven/'
+    }
+    maven {
+        name = "mappings"
+        url = 'https://dogforce-games.com/maven'
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = 'https://modmaven.k-4u.nl'
+    }
+    maven {
+        name = "curios"
+        url = 'https://maven.theillusivec4.top/'
+    }
+    maven { url = 'https://maven.blamejared.com' }
+    maven { url = 'https://www.cursemaven.com' }
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
         attributes([
-            "Specification-Title": "dimstack",
-            "Specification-Vendor": "dimstack",
-            "Specification-Version": "1", // We are version 1 of ourselves
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"dimstack",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-            
+                "Specification-Title"     : "dimstack",
+                "Specification-Vendor"    : "dimstack",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "dimstack",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+
         ])
     }
 }
 
 // Example configuration to allow publishing using the maven-publish task
 // This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar') 
+jar.finalizedBy('reobfJar')
 // However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
 
 //publish.dependsOn('reobfJar')
@@ -198,5 +197,5 @@ task copyJar(type: Copy) {
 }
 
 cleanJar {
-  delete 'build/libs'
+    delete 'build/libs'
 }
